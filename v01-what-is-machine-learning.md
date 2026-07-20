@@ -27,17 +27,9 @@ You didn't write "if raining, then more chai." **The data taught it.** That's th
 
 This one picture is the entire reason ML exists 👇
 
-```
-   TRADITIONAL PROGRAMMING                 MACHINE LEARNING
-   ───────────────────────                 ────────────────
+![Traditional programming vs Machine Learning](images/01-traditional-vs-ml.png)
 
-   Rules  ┐                                Data      ┐
-          ├──►  Computer  ──► Answers      Answers   ├──►  Computer  ──►  RULES
-   Data   ┘                                (examples)┘        (it finds the rules itself)
-
-   YOU write the rules.                    The MACHINE writes the rules.
-   "If X then Y."                          You just show it examples.
-```
+*In normal coding YOU write the rules and the computer gives answers. In ML you give the computer answers (examples) and it writes the rules itself.*
 
 > 🟢 **The intuition:** In normal coding, *you* are the smart one — you write every rule. In ML, you let the **machine become smart** by showing it examples and letting it discover the rules.
 
@@ -50,30 +42,7 @@ But show a machine 10,000 cat photos? It learns "cat-ness" on its own. 🐱
 
 ## 🖼 The Picture — how learning actually happens
 
-```
-        ┌──────────────┐
-        │  PAST DATA    │   e.g. 1000 days of chai sales
-        │  (examples)   │        (weather, time, crowd → cups sold)
-        └──────┬───────┘
-               │  "here are examples, figure out the pattern"
-               ▼
-        ┌──────────────┐
-        │   LEARNING    │   the model adjusts itself until its
-        │  (training)   │   guesses match the real answers
-        └──────┬───────┘
-               │  now it has learned the pattern
-               ▼
-        ┌──────────────┐
-        │  THE MODEL    │   a trained "brain" — a math formula
-        │ (the rules it │   that maps input → prediction
-        │   learned)    │
-        └──────┬───────┘
-               │  give it a NEW day it's never seen
-               ▼
-        ┌──────────────┐
-        │  PREDICTION   │   "Rainy + 6PM + salary day → make 220 cups"
-        └──────────────┘
-```
+![How a machine learns: data → training → model → prediction](images/02-how-learning-happens.png)
 
 > 🟡 **Remember this word: `model`.** People say it constantly. A "model" is just **the pattern the machine learned, saved as a math formula.** That's it. Not scary.
 
@@ -143,6 +112,12 @@ model.fit(X, y)                        # 👈 THIS is "learning"
 print(model.predict([[18]]))           # a new day: 18°C → how many cups?
 # ➜ it predicts ~182 cups, having learned "colder = more chai"
 ```
+
+**And here's what the machine actually learned — a line:**
+
+![Chai sales regression: colder day means more chai](images/03-chai-regression.png)
+
+*The orange dots are past days (the data). The blue line is what the model learned. The green star is a brand-new day it predicts — that's the magic of `.fit()`.*
 
 > 🟡 That one line — `model.fit(X, y)` — is **the entire heart of Machine Learning.** Everything in the next 29 days is a more powerful version of `.fit()`.
 
