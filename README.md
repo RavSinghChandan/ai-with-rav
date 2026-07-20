@@ -1,89 +1,52 @@
-# 🎓 Machine Learning in 30 Days — with Rav
+# 🎓 AI with Rav — the complete learning universe
 
-> **20 videos. ~7 minutes each. Zero jargon left unexplained.**
-> For the curious engineer *and* the smart non-techie. If you can follow a cricket match, you can follow this.
-
-<p align="center">
-  <b>▶ Watch:</b> <a href="https://www.youtube.com/@aiwithrav">youtube.com/@aiwithrav</a> &nbsp;·&nbsp;
-  <b>📖 Read:</b> you're here &nbsp;·&nbsp;
-  <b>🧭 Bigger picture:</b> <a href="https://github.com/RavSinghChandan/ai-engineer/blob/main/handbook/AI_ENGINEER_MINDMAP.md">The Master Mind Map</a>
-</p>
+> **Learn AI the way you actually think.** Every topic, taught with Indian-context stories, clean diagrams, and zero jargon left unexplained — for the curious engineer *and* the smart non-techie.
+>
+> **▶ Watch:** [youtube.com/@aiwithrav](https://www.youtube.com/@aiwithrav) · **📖 Read:** you're here · every video is a downloadable branded PDF.
 
 ---
 
-## Why this series exists
+## 📚 The topics
 
-Most ML courses do one of two things wrong:
-- They **drown you in math** on day one (non-technical people quit), or
-- They **hand-wave everything** (technical people learn nothing real).
+Each folder = one YouTube playlist / learning track. Every video inside is a branded PDF built from the **same factory template** — identical premium look across all of them.
 
-This series does neither. **Every video starts with a story you already understand** — a chai stall, a Mumbai local, a kirana shop, a cricket score — and *then* builds up to the real intuition, the real math, and real code. Watch for the story; stay for the depth.
+### 🧠 The AI / ML learning path
+| # | Topic | What it covers |
+|---|-------|----------------|
+| 01 | [🧮 Mathematics](topics/01-mathematics/) | Vectors, calculus, probability — the root of everything |
+| 02 | [🤖 Machine Learning](topics/02-machine-learning/) | Supervised, unsupervised, RL — **series started** |
+| 03 | [🧠 Deep Learning](topics/03-deep-learning/) | Neural nets, backprop, CNNs, RNNs |
+| 04 | [⚡ Transformers](topics/04-transformers/) | Attention, BERT, GPT |
+| 05 | [💬 LLMs](topics/05-llms/) | Prompting, embeddings, fine-tuning |
+| 06 | [🔎 RAG Systems](topics/06-rag-systems/) | Chunking, hybrid search, reranking |
+| 07 | [🕹️ Agentic AI](topics/07-agentic-ai/) | Agents, LangGraph, multi-agent |
+| 08 | [🔗 LangChain](topics/08-langchain/) | LangChain & LangGraph hands-on |
+| 09 | [🚀 MLOps](topics/09-mlops/) | Deploy, monitor, version AI |
+| 10 | [📊 AI Evaluation](topics/10-ai-evaluation/) | RAGAS, LLM-as-judge, metrics |
 
-By Day 30 you will genuinely understand how machines learn — not memorise, *understand*.
-
----
-
-## How to use this repo
-
-| You are… | Do this |
-|---|---|
-| **Watching the video** | Rav shares this page on screen. Just watch. |
-| **Reviewing later** | Read the video's `.md` file top-to-bottom. Each is self-contained. |
-| **Only want the gist** | Read the **🎯 In One Line** and **🖼 The Picture** boxes in each file. |
-| **Want the math** | Scroll to **🧮 The Math** — skippable if you're non-technical. |
-| **Want to build** | Every file ends with **⚙️ Try It** — copy-paste runnable code. |
-
-> 🟢 Green = intuition (everyone) · 🔵 Blue = math (technical) · 🟡 Yellow = "remember this" · 🔴 Red = common mistake
-
----
-
-## The 30-Day Map (20 videos)
-
-### 🌱 PART 1 — Foundations (V1–V4) · *"What is this thing?"*
-| # | Video | One-line promise |
-|---|-------|------------------|
-| 01 | [What is Machine Learning, really?](v01-what-is-machine-learning.md) | The kirana-shop owner already does ML. You'll see how. |
-| 02 | The 3 Families: Supervised, Unsupervised, Reinforcement | Three ways a machine learns — like three ways a child learns. |
-| 03 | The ML Workflow (how a real model is actually built) | From raw data to a working model — the 7 real steps. |
-| 04 | Data: the fuel (features, labels, train/test split) | Garbage in, garbage out — why data beats fancy algorithms. |
-
-### ⚙️ PART 2 — The Algorithms (V5–V14) · *"How does it actually decide?"*
-| # | Video | One-line promise |
-|---|-------|------------------|
-| 05 | Linear Regression | Drawing the best line through your sales data. |
-| 06 | Logistic Regression | Yes or No? Pass or fail? The spam-filter brain. |
-| 07 | Decision Trees | 20 Questions — the game that classifies anything. |
-| 08 | Random Forest | Ask 100 experts, take a vote. Wisdom of the crowd. |
-| 09 | XGBoost (the Kaggle king) | Learning from your own mistakes, round after round. |
-| 10 | K-Nearest Neighbours (KNN) | "You are the average of your 5 closest friends." |
-| 11 | Support Vector Machines (SVM) | Drawing the *widest* street between two groups. |
-| 12 | K-Means Clustering | Sorting a messy drawer with nobody telling you the labels. |
-| 13 | PCA (making big data small) | Squeezing 100 features into 2 without losing the story. |
-| 14 | Reinforcement Learning (a taste) | How a dog — and ChatGPT — learn from reward. |
-
-### 🚀 PART 3 — Real Machine Learning (V15–V20) · *"How do the pros ship it?"*
-| # | Video | One-line promise |
-|---|-------|------------------|
-| 15 | Bias vs Variance (the #1 concept interviewers ask) | Why your model is either too dumb or too clever. |
-| 16 | Overfitting & how to stop it (regularization) | When a student memorises instead of understanding. |
-| 17 | Evaluation: Accuracy, Precision, Recall, F1 | Why "95% accurate" can be a total lie. |
-| 18 | Feature Engineering (where the real magic is) | The unglamorous work that wins competitions. |
-| 19 | Deploying ML (MLOps in plain English) | A model on your laptop is worth ₹0. Shipping it is worth everything. |
-| 20 | The Bridge: from ML to Deep Learning & LLMs | Where this all leads — and your next 30 days. |
+### 🛠️ Engineering & career
+| # | Topic | What it covers |
+|---|-------|----------------|
+| 11 | [🏗️ System Design](topics/11-system-design/) | AI + general system design |
+| 12 | [🛠️ Projects](topics/12-projects/) | Real end-to-end AI builds |
+| 13 | [🌍 Open Source Contribution](topics/13-open-source/) | 3 merged PRs, how I did it |
+| 14 | [☕ Java 8](topics/14-java/) | Java 8 features (Tech with Rav) |
+| 15 | [🌱 Spring Boot](topics/15-spring-boot/) | Backend dev (Tech with Rav) |
 
 ---
 
-## The golden thread 🧵
+## 🏭 How every video is made (the factory)
 
-Everything here connects **upward** to the [Master Mind Map](https://github.com/RavSinghChandan/ai-engineer/blob/main/handbook/AI_ENGINEER_MINDMAP.md):
+**Design is frozen. Content is per-video.** See [HOW_TO_MAKE_A_DAY.md](HOW_TO_MAKE_A_DAY.md).
 
 ```
-   MATH  →  MACHINE LEARNING (you are here)  →  DEEP LEARNING  →  TRANSFORMERS  →  LLMs
-   (done)         (these 30 days)                  (next)
+build_master_pdf.py          ← the ONE frozen template (logo, photo, dark theme)
+topics/<topic>/days/dayNN.md ← content only (title + story + diagrams)
+   ↓  python3 build_master_pdf.py topics/<topic>/days/dayNN.md
+AI-with-Rav_Day-NN_<title>.pdf  ← branded PDF, identical style
 ```
 
-Maths is already covered. Open-source contribution is already covered (3 merged PRs — see the repo).
-This is the middle piece that makes the rest make sense.
+Same cover, same colors, same quality — **across every topic.** Change the content, the brand stays.
 
 ---
 

@@ -51,7 +51,7 @@ def codeblock(lines):
         ('LEFTPADDING',(0,0),(-1,-1),12),('RIGHTPADDING',(0,0),(-1,-1),12),
         ('TOPPADDING',(0,0),(-1,-1),10),('BOTTOMPADDING',(0,0),(-1,-1),10)])); return t
 
-DAY=1; VIDEO=1; TITLE=''; SUBTITLE=''
+DAY=1; VIDEO=1; TITLE=''; SUBTITLE=''; TOPIC='MACHINE LEARNING'
 def page_bg(cnv,doc,footer=True):
     cnv.setFillColor(BG); cnv.rect(0,0,W,H,fill=1,stroke=0)
     if not footer: return
@@ -74,8 +74,8 @@ def draw_cover(cnv,doc):
     cnv.drawImage(CIRCLE,cx-30*mm,py-60*mm,60*mm,60*mm,mask='auto')
     cnv.setStrokeColor(SAF); cnv.setLineWidth(2.5); cnv.circle(cx,py-30*mm,30*mm,stroke=1,fill=0)
     ty=py-60*mm-20*mm
-    cnv.setFillColor(SAF); cnv.setFont('Helvetica-Bold',32); cnv.drawCentredString(cx,ty,'MACHINE LEARNING')
-    cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold',21); cnv.drawCentredString(cx,ty-13*mm,'in 30 Days')
+    cnv.setFillColor(SAF); cnv.setFont('Helvetica-Bold',32); cnv.drawCentredString(cx,ty,TOPIC.upper())
+    cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold',21); cnv.drawCentredString(cx,ty-13*mm,'with Rav')
     by=ty-30*mm; cnv.setFillColor(TEAL); cnv.roundRect(cx-34*mm,by-9*mm,68*mm,15*mm,7.5*mm,fill=1,stroke=0)
     cnv.setFillColor(BG); cnv.setFont('Helvetica-Bold',14); cnv.drawCentredString(cx,by-4*mm,f'DAY {DAY}  ·  VIDEO {VIDEO}')
     cnv.setFillColor(MUT); cnv.setFont('Helvetica',13); cnv.drawCentredString(cx,by-22*mm,SUBTITLE or TITLE)
@@ -137,11 +137,12 @@ def build_flowables(body):
     return S
 
 def main():
-    global DAY,VIDEO,TITLE,SUBTITLE
+    global DAY,VIDEO,TITLE,SUBTITLE,TOPIC
     src=sys.argv[1] if len(sys.argv)>1 else 'days/day01.md'
     meta,body=parse(src)
     DAY=int(meta.get('day',1)); VIDEO=int(meta.get('video',DAY))
     TITLE=meta.get('title',''); SUBTITLE=meta.get('subtitle',TITLE)
+    global TOPIC; TOPIC=meta.get('topic','MACHINE LEARNING')
     circle_crop(PHOTO,CIRCLE)
     slug=re.sub(r'[^a-z0-9]+','-',TITLE.lower()).strip('-')[:40]
     out=f"AI-with-Rav_Day-{DAY:02d}_{slug}.pdf"

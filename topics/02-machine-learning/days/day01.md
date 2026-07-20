@@ -1,5 +1,6 @@
 ---
 day: 1
+topic: Machine Learning
 video: 1
 title: What is Machine Learning, really?
 subtitle: What is Machine Learning, really?
