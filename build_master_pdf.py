@@ -29,15 +29,15 @@ LINE = HexColor('#21262d')
 
 W, H = A4
 
-# ---- make a circular HEADSHOT from the standing portrait ----
-# The face sits at ~0.55 width, ~0.22 height in the source portrait. Crop a tight
-# square around the FACE (not a center crop, which would grab the torso).
-def circle_crop(src, dst, size=640, fcx=0.55, fcy=0.22, frac=0.30):
+# ---- make a circular HEAD-AND-SHOULDERS portrait from the standing photo ----
+# Show the TOP HALF (head + shoulders + upper chest), not just the face and not
+# the torso. Crop a wider square starting near the top of the head.
+def circle_crop(src, dst, size=680, fcx=0.55, top_frac=0.06, frac=0.52):
     im = PImage.open(src).convert('RGBA'); w,h = im.size
-    side = int(h*frac)
-    cx, cy = int(w*fcx), int(h*fcy)
+    side = int(h*frac)                       # taller crop = head + shoulders + chest
+    cx = int(w*fcx)
     left = min(max(0, cx-side//2), w-side)
-    top  = min(max(0, cy-side//2), h-side)
+    top  = min(max(0, int(h*top_frac)), h-side)   # start just above the head
     im2 = im.crop((left, top, left+side, top+side)).resize((size,size))
     mask = PImage.new('L',(size,size),0); ImageDraw.Draw(mask).ellipse((0,0,size,size),fill=255)
     out = PImage.new('RGBA',(size,size),(0,0,0,0)); out.paste(im2,(0,0),mask); out.save(dst)
@@ -93,20 +93,28 @@ def codeblock(lines):
 def draw_cover(cnv, doc):
     page_bg(cnv, doc, footer=False)
     cx = W/2
-    # SMALL logo, top-centered (real logo if present, else small text mark)
+    # SMALL logo on a WHITE rounded card so its blue parts are fully visible,
+    # with "AI with Rav" text beside/under it.
     logo='brand/ai-for-business-logo.png'
     if os.path.exists(logo):
         from PIL import Image as _PI; lr=_PI.open(logo); rat=lr.height/lr.width
-        lw=34*mm; lh=lw*rat
-        cnv.drawImage(logo, cx-lw/2, H-24*mm-lh, lw, lh, mask='auto', preserveAspectRatio=True)
-        logo_bottom = H-24*mm-lh
+        lw=26*mm; lh=lw*rat
+        card_w=lw+8*mm; card_h=lh+8*mm
+        card_x=cx-card_w/2; card_y=H-22*mm-card_h
+        # white rounded card behind the logo
+        cnv.setFillColor(HexColor('#ffffff')); cnv.roundRect(card_x, card_y, card_w, card_h, 6*mm, fill=1, stroke=0)
+        cnv.drawImage(logo, cx-lw/2, card_y+4*mm, lw, lh, mask='auto', preserveAspectRatio=True)
+        # brand name under the card
+        name_y = card_y - 9*mm
+        cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold', 18); cnv.drawCentredString(cx, name_y, 'AI with Rav')
+        logo_bottom = name_y - 4*mm
     else:
         cnv.setFillColor(SAF); cnv.roundRect(cx-11*mm, H-30*mm, 22*mm, 22*mm, 5*mm, fill=1, stroke=0)
         cnv.setFillColor(BG); cnv.setFont('Helvetica-Bold', 20); cnv.drawCentredString(cx, H-23*mm, 'AI')
         cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold', 15); cnv.drawCentredString(cx, H-40*mm, 'AI with Rav')
         logo_bottom = H-44*mm
-    # photo circle — clear, face fully visible
-    py = logo_bottom - 12*mm
+    # photo circle — top-half portrait
+    py = logo_bottom - 10*mm
     cnv.drawImage('brand/rav-circle.png', cx-30*mm, py-60*mm, 60*mm, 60*mm, mask='auto')
     cnv.setStrokeColor(SAF); cnv.setLineWidth(2.5); cnv.circle(cx, py-30*mm, 30*mm, stroke=1, fill=0)
     # title
