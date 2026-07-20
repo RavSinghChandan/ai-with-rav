@@ -6,7 +6,7 @@
 <p align="center">
   <b>▶ Watch:</b> <a href="https://www.youtube.com/@aiwithrav">youtube.com/@aiwithrav</a> &nbsp;·&nbsp;
   <b>📖 Read:</b> you're here &nbsp;·&nbsp;
-  <b>🧭 Bigger picture:</b> <a href="../AI_ENGINEER_MINDMAP.md">The Master Mind Map</a>
+  <b>🧭 Bigger picture:</b> <a href="https://github.com/RavSinghChandan/ai-engineer/blob/main/handbook/AI_ENGINEER_MINDMAP.md">The Master Mind Map</a>
 </p>
 
 ---
@@ -75,7 +75,7 @@ By Day 30 you will genuinely understand how machines learn — not memorise, *un
 
 ## The golden thread 🧵
 
-Everything here connects **upward** to the [Master Mind Map](../AI_ENGINEER_MINDMAP.md):
+Everything here connects **upward** to the [Master Mind Map](https://github.com/RavSinghChandan/ai-engineer/blob/main/handbook/AI_ENGINEER_MINDMAP.md):
 
 ```
    MATH  →  MACHINE LEARNING (you are here)  →  DEEP LEARNING  →  TRANSFORMERS  →  LLMs
