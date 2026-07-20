@@ -53,12 +53,13 @@ def hex_b(t): return f'<b><font color="#FFD166">{t}</font></b>'
 def teal(t):  return f'<font color="#33B5E5">{t}</font>'
 
 # ---- page background + footer (every page) ----
-def page_bg(cnv, doc):
+def page_bg(cnv, doc, footer=True):
     cnv.setFillColor(BG); cnv.rect(0,0,W,H,fill=1,stroke=0)
-    # footer
+    if not footer: return
+    # footer — brand name only, NO links
     cnv.setFillColor(MUT); cnv.setFont('Helvetica',8)
     cnv.drawString(16*mm, 10*mm, 'AI with Rav  ·  Machine Learning in 30 Days')
-    cnv.drawRightString(W-16*mm, 10*mm, 'youtube.com/@aiwithrav')
+    cnv.drawRightString(W-16*mm, 10*mm, f'Day 1')
     cnv.setStrokeColor(LINE); cnv.setLineWidth(0.5); cnv.line(16*mm,13*mm,W-16*mm,13*mm)
 
 # ---- callout box flowable ----
@@ -82,33 +83,35 @@ def codeblock(lines):
         ('TOPPADDING',(0,0),(-1,-1),10),('BOTTOMPADDING',(0,0),(-1,-1),10)]))
     return t
 
-# ---- LOGO (designed, drawn on cover) ----
+# ---- COVER ----
 def draw_cover(cnv, doc):
-    page_bg(cnv, doc)
+    page_bg(cnv, doc, footer=False)
     cx = W/2
-    # logo: use real AI-for-Business logo if present, else drawn fallback
+    # SMALL logo, top-centered (real logo if present, else small text mark)
     logo='brand/ai-for-business-logo.png'
     if os.path.exists(logo):
         from PIL import Image as _PI; lr=_PI.open(logo); rat=lr.height/lr.width
-        lw=52*mm; lh=lw*rat
-        cnv.drawImage(logo, cx-lw/2, H-40*mm-lh, lw, lh, mask='auto')
+        lw=34*mm; lh=lw*rat
+        cnv.drawImage(logo, cx-lw/2, H-24*mm-lh, lw, lh, mask='auto', preserveAspectRatio=True)
+        logo_bottom = H-24*mm-lh
     else:
-        cnv.setFillColor(SAF); cnv.roundRect(cx-16*mm, H-52*mm, 32*mm, 32*mm, 8*mm, fill=1, stroke=0)
-        cnv.setFillColor(BG); cnv.setFont('Helvetica-Bold', 30); cnv.drawCentredString(cx, H-42*mm, 'AI')
-        cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold', 26); cnv.drawCentredString(cx, H-66*mm, 'AI with Rav')
-        cnv.setFillColor(TEAL); cnv.setFont('Helvetica', 12); cnv.drawCentredString(cx, H-74*mm, 'Learn AI the way you actually think.')
-    # photo circle
-    cnv.drawImage('brand/rav-circle.png', cx-27*mm, H-140*mm, 54*mm, 54*mm, mask='auto')
-    cnv.setStrokeColor(SAF); cnv.setLineWidth(2); cnv.circle(cx, H-113*mm, 27*mm, stroke=1, fill=0)
-    # title block
-    cnv.setFillColor(SAF); cnv.setFont('Helvetica-Bold', 30); cnv.drawCentredString(cx, H-168*mm, 'MACHINE LEARNING')
-    cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold', 20); cnv.drawCentredString(cx, H-180*mm, 'in 30 Days')
+        cnv.setFillColor(SAF); cnv.roundRect(cx-11*mm, H-30*mm, 22*mm, 22*mm, 5*mm, fill=1, stroke=0)
+        cnv.setFillColor(BG); cnv.setFont('Helvetica-Bold', 20); cnv.drawCentredString(cx, H-23*mm, 'AI')
+        cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold', 15); cnv.drawCentredString(cx, H-40*mm, 'AI with Rav')
+        logo_bottom = H-44*mm
+    # photo circle — clear, face fully visible
+    py = logo_bottom - 12*mm
+    cnv.drawImage('brand/rav-circle.png', cx-30*mm, py-60*mm, 60*mm, 60*mm, mask='auto')
+    cnv.setStrokeColor(SAF); cnv.setLineWidth(2.5); cnv.circle(cx, py-30*mm, 30*mm, stroke=1, fill=0)
+    # title
+    ty = py-60*mm - 20*mm
+    cnv.setFillColor(SAF); cnv.setFont('Helvetica-Bold', 32); cnv.drawCentredString(cx, ty, 'MACHINE LEARNING')
+    cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold', 21); cnv.drawCentredString(cx, ty-13*mm, 'in 30 Days')
     # day badge
-    cnv.setFillColor(TEAL); cnv.roundRect(cx-32*mm, H-205*mm, 64*mm, 14*mm, 7*mm, fill=1, stroke=0)
-    cnv.setFillColor(BG); cnv.setFont('Helvetica-Bold', 13)
-    cnv.drawCentredString(cx, H-201*mm, 'DAY 1  ·  VIDEO 1')
-    cnv.setFillColor(MUT); cnv.setFont('Helvetica', 12)
-    cnv.drawCentredString(cx, H-220*mm, 'What is Machine Learning, really?')
+    by = ty-30*mm
+    cnv.setFillColor(TEAL); cnv.roundRect(cx-34*mm, by-9*mm, 68*mm, 15*mm, 7.5*mm, fill=1, stroke=0)
+    cnv.setFillColor(BG); cnv.setFont('Helvetica-Bold', 14); cnv.drawCentredString(cx, by-4*mm, 'DAY 1  ·  VIDEO 1')
+    cnv.setFillColor(MUT); cnv.setFont('Helvetica', 13); cnv.drawCentredString(cx, by-22*mm, 'What is Machine Learning, really?')
 
 # ---- build document ----
 def build(out='AI-with-Rav_Day-01_Machine-Learning.pdf'):
