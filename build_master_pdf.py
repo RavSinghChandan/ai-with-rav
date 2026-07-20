@@ -104,11 +104,17 @@ def build_flowables(body):
             S.append(Paragraph(md(ln[4:]),H2)); S.append(HRFlowable(width='100%',thickness=0.5,color=LINE,spaceAfter=6))
         elif ln.startswith('@image|'):
             parts=ln.split('|'); path=parts[1]; cap=parts[2] if len(parts)>2 else None
-            if os.path.exists(path):
-                ir=PImage.open(path); r=ir.height/ir.width; w=W-40*mm
-                S.append(Spacer(1,6)); S.append(Image(path,width=w,height=w*r))
+            # resolve image relative to the content file's folder, then repo root as fallback
+            cand=[os.path.join(BASEDIR,path), path]
+            real=next((c for c in cand if os.path.exists(c)), None)
+            if real:
+                ir=PImage.open(real); r=ir.height/ir.width; w=W-40*mm
+                S.append(Spacer(1,6)); S.append(Image(real,width=w,height=w*r))
                 if cap: S.append(Spacer(1,3)); S.append(Paragraph(cap,CAP))
                 S.append(Spacer(1,8))
+            else:
+                # LOUD failure instead of silent skip — so a missing diagram is never invisible
+                print(f"  !! IMAGE NOT FOUND: {path}  (looked in {BASEDIR} and repo root)")
         elif ln=='@bullets':
             i+=1
             while i<len(lines) and lines[i].rstrip()!='@end':
@@ -137,15 +143,18 @@ def build_flowables(body):
     return S
 
 def main():
-    global DAY,VIDEO,TITLE,SUBTITLE,TOPIC
+    global DAY,VIDEO,TITLE,SUBTITLE,TOPIC,BASEDIR
     src=sys.argv[1] if len(sys.argv)>1 else 'days/day01.md'
+    # BASEDIR = the topic folder (content file is in <topic>/days/, images in <topic>/images/)
+    BASEDIR=os.path.dirname(os.path.dirname(os.path.abspath(src)))  # up from days/ to topic root
     meta,body=parse(src)
     DAY=int(meta.get('day',1)); VIDEO=int(meta.get('video',DAY))
     TITLE=meta.get('title',''); SUBTITLE=meta.get('subtitle',TITLE)
-    global TOPIC; TOPIC=meta.get('topic','MACHINE LEARNING')
+    TOPIC=meta.get('topic','MACHINE LEARNING')
     circle_crop(PHOTO,CIRCLE)
     slug=re.sub(r'[^a-z0-9]+','-',TITLE.lower()).strip('-')[:40]
-    out=f"AI-with-Rav_Day-{DAY:02d}_{slug}.pdf"
+    # write the PDF INTO the topic folder so each topic keeps its own PDFs
+    out=os.path.join(BASEDIR, f"AI-with-Rav_Day-{DAY:02d}_{slug}.pdf")
     doc=BaseDocTemplate(out,pagesize=A4,leftMargin=16*mm,rightMargin=16*mm,topMargin=18*mm,bottomMargin=18*mm)
     frame=Frame(16*mm,16*mm,W-32*mm,H-34*mm,id='main')
     doc.addPageTemplates([PageTemplate(id='cover',frames=[frame],onPage=draw_cover),
