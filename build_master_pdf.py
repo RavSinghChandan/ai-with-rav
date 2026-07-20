@@ -1,224 +1,155 @@
 #!/usr/bin/env python3
 """
-Master branded PDF generator for 'AI with Rav — ML in 30 Days'.
-Generates ONE top-quality dark PDF per day, directly (no md/html pipeline).
-Branding: designed 'AI with Rav' logo + Rav's photo (circular) + saffron/teal theme.
-Usage: python3 build_master_pdf.py  (Day 1 built in)
+FACTORY TEMPLATE — AI with Rav · ML in 30 Days.
+Design is FROZEN here. Content comes from days/dayNN.md.
+Usage:  python3 build_master_pdf.py days/day02.md
+Output: AI-with-Rav_Day-02_<slug>.pdf   (identical style, new content)
 """
+import sys, os, re
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.lib.colors import HexColor
-from reportlab.pdfgen import canvas
 from reportlab.platypus import (BaseDocTemplate, PageTemplate, Frame, Paragraph,
-    Spacer, Image, Table, TableStyle, HRFlowable, KeepTogether)
+    Spacer, Image, Table, TableStyle, HRFlowable, NextPageTemplate, PageBreak)
 from reportlab.lib.styles import ParagraphStyle
-from reportlab.lib.enums import TA_LEFT, TA_CENTER
 from PIL import Image as PImage, ImageDraw
-import os
 
-# ---- palette ----
-BG   = HexColor('#0d1117')
-CARD = HexColor('#161b22')
-FG   = HexColor('#e6edf3')
-MUT  = HexColor('#9fb3c8')
-SAF  = HexColor('#FF6B35')
-TEAL = HexColor('#33B5E5')
-GRN  = HexColor('#06D6A0')
-YEL  = HexColor('#FFD166')
-LINE = HexColor('#21262d')
+# ===== FROZEN BRAND (never changes) =====
+BG=HexColor('#0d1117'); CARD=HexColor('#161b22'); FG=HexColor('#e6edf3'); MUT=HexColor('#9fb3c8')
+SAF=HexColor('#FF6B35'); TEAL=HexColor('#33B5E5'); GRN=HexColor('#06D6A0'); YEL=HexColor('#FFD166'); LINE=HexColor('#21262d')
+ACCENT={'yellow':YEL,'green':GRN,'teal':TEAL,'saffron':SAF}
+W,H=A4
+LOGO='brand/ai-for-business-logo.png'; PHOTO='brand/rav-photo.jpg'; CIRCLE='brand/rav-circle.png'
 
-W, H = A4
+def circle_crop(src,dst,size=680,fcx=0.55,top_frac=0.06,frac=0.52):
+    im=PImage.open(src).convert('RGBA'); w,h=im.size; side=int(h*frac); cx=int(w*fcx)
+    left=min(max(0,cx-side//2),w-side); top=min(max(0,int(h*top_frac)),h-side)
+    im2=im.crop((left,top,left+side,top+side)).resize((size,size))
+    m=PImage.new('L',(size,size),0); ImageDraw.Draw(m).ellipse((0,0,size,size),fill=255)
+    out=PImage.new('RGBA',(size,size),(0,0,0,0)); out.paste(im2,(0,0),m); out.save(dst)
 
-# ---- make a circular HEAD-AND-SHOULDERS portrait from the standing photo ----
-# Show the TOP HALF (head + shoulders + upper chest), not just the face and not
-# the torso. Crop a wider square starting near the top of the head.
-def circle_crop(src, dst, size=680, fcx=0.55, top_frac=0.06, frac=0.52):
-    im = PImage.open(src).convert('RGBA'); w,h = im.size
-    side = int(h*frac)                       # taller crop = head + shoulders + chest
-    cx = int(w*fcx)
-    left = min(max(0, cx-side//2), w-side)
-    top  = min(max(0, int(h*top_frac)), h-side)   # start just above the head
-    im2 = im.crop((left, top, left+side, top+side)).resize((size,size))
-    mask = PImage.new('L',(size,size),0); ImageDraw.Draw(mask).ellipse((0,0,size,size),fill=255)
-    out = PImage.new('RGBA',(size,size),(0,0,0,0)); out.paste(im2,(0,0),mask); out.save(dst)
-circle_crop('brand/rav-photo.jpg','brand/rav-circle.png')
+def st(n,**k):
+    b=dict(fontName='Helvetica',fontSize=11.5,leading=17,textColor=FG,spaceAfter=6); b.update(k); return ParagraphStyle(n,**b)
+H1=st('H1',fontName='Helvetica-Bold',fontSize=22,leading=26,textColor=SAF,spaceAfter=4)
+H2=st('H2',fontName='Helvetica-Bold',fontSize=15,leading=19,textColor=TEAL,spaceBefore=14,spaceAfter=6)
+BODY=st('BODY'); BULL=st('BULL',leftIndent=14,bulletIndent=2)
+NOTE=st('NOTE'); CODE=st('CODE',fontName='Courier',fontSize=9.5,leading=13); CAP=st('CAP',fontSize=9.5,leading=13,textColor=MUT,alignment=1)
 
-# ---- styles ----
-def st(name,**kw):
-    base=dict(fontName='Helvetica',fontSize=11,leading=16,textColor=FG,spaceAfter=6)
-    base.update(kw); return ParagraphStyle(name,**base)
-H1   = st('H1',fontName='Helvetica-Bold',fontSize=22,leading=26,textColor=SAF,spaceAfter=4)
-H2   = st('H2',fontName='Helvetica-Bold',fontSize=15,leading=19,textColor=TEAL,spaceBefore=14,spaceAfter=6)
-BODY = st('BODY',fontSize=11.5,leading=17)
-BULL = st('BULL',fontSize=11.5,leading=17,leftIndent=14,bulletIndent=2)
-NOTE = st('NOTE',fontSize=11.5,leading=17,textColor=FG)
-CODE = st('CODE',fontName='Courier',fontSize=9.5,leading=13,textColor=HexColor('#e6edf3'))
-CAP  = st('CAP',fontSize=9.5,leading=13,textColor=MUT,alignment=TA_CENTER)
+def md(t):  # inline **bold**->yellow, *italic*
+    t=re.sub(r'\*\*(.+?)\*\*',r'<b><font color="#FFD166">\1</font></b>',t)
+    t=re.sub(r'\*(.+?)\*',r'<i>\1</i>',t); return t
 
-def hex_b(t): return f'<b><font color="#FFD166">{t}</font></b>'
-def teal(t):  return f'<font color="#33B5E5">{t}</font>'
+def callout(text,accent):
+    p=Paragraph(md(text),NOTE); t=Table([[p]],colWidths=[W-32*mm-10*mm])
+    t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,-1),CARD),('LINEBEFORE',(0,0),(0,-1),3,accent),
+        ('LEFTPADDING',(0,0),(-1,-1),12),('RIGHTPADDING',(0,0),(-1,-1),12),
+        ('TOPPADDING',(0,0),(-1,-1),9),('BOTTOMPADDING',(0,0),(-1,-1),9)])); return t
+def codeblock(lines):
+    p=Paragraph('<br/>'.join(l.replace(' ','&nbsp;') for l in lines),CODE)
+    t=Table([[p]],colWidths=[W-32*mm-8*mm])
+    t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,-1),HexColor('#0b0e13')),('BOX',(0,0),(-1,-1),0.5,LINE),
+        ('LEFTPADDING',(0,0),(-1,-1),12),('RIGHTPADDING',(0,0),(-1,-1),12),
+        ('TOPPADDING',(0,0),(-1,-1),10),('BOTTOMPADDING',(0,0),(-1,-1),10)])); return t
 
-# ---- page background + footer (every page) ----
-def page_bg(cnv, doc, footer=True):
+DAY=1; VIDEO=1; TITLE=''; SUBTITLE=''
+def page_bg(cnv,doc,footer=True):
     cnv.setFillColor(BG); cnv.rect(0,0,W,H,fill=1,stroke=0)
     if not footer: return
-    # footer — brand name only, NO links
     cnv.setFillColor(MUT); cnv.setFont('Helvetica',8)
-    cnv.drawString(16*mm, 10*mm, 'AI with Rav  ·  Machine Learning in 30 Days')
-    cnv.drawRightString(W-16*mm, 10*mm, f'Day 1')
+    cnv.drawString(16*mm,10*mm,'AI with Rav  ·  Machine Learning in 30 Days')
+    cnv.drawRightString(W-16*mm,10*mm,f'Day {DAY}')
     cnv.setStrokeColor(LINE); cnv.setLineWidth(0.5); cnv.line(16*mm,13*mm,W-16*mm,13*mm)
 
-# ---- callout box flowable ----
-def callout(text, accent):
-    p = Paragraph(text, NOTE)
-    t = Table([[p]], colWidths=[W-32*mm-10*mm])
-    t.setStyle(TableStyle([
-        ('BACKGROUND',(0,0),(-1,-1),CARD),
-        ('LINEBEFORE',(0,0),(0,-1),3,accent),
-        ('LEFTPADDING',(0,0),(-1,-1),12),('RIGHTPADDING',(0,0),(-1,-1),12),
-        ('TOPPADDING',(0,0),(-1,-1),9),('BOTTOMPADDING',(0,0),(-1,-1),9),
-    ]))
-    return t
-
-def codeblock(lines):
-    p = Paragraph('<br/>'.join(l.replace(' ','&nbsp;') for l in lines), CODE)
-    t = Table([[p]], colWidths=[W-32*mm-8*mm])
-    t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,-1),HexColor('#0b0e13')),
-        ('BOX',(0,0),(-1,-1),0.5,LINE),
-        ('LEFTPADDING',(0,0),(-1,-1),12),('RIGHTPADDING',(0,0),(-1,-1),12),
-        ('TOPPADDING',(0,0),(-1,-1),10),('BOTTOMPADDING',(0,0),(-1,-1),10)]))
-    return t
-
-# ---- COVER ----
-def draw_cover(cnv, doc):
-    page_bg(cnv, doc, footer=False)
-    cx = W/2
-    # SMALL logo on a WHITE rounded card so its blue parts are fully visible,
-    # with "AI with Rav" text beside/under it.
-    logo='brand/ai-for-business-logo.png'
-    if os.path.exists(logo):
-        from PIL import Image as _PI; lr=_PI.open(logo); rat=lr.height/lr.width
-        lw=26*mm; lh=lw*rat
-        card_w=lw+8*mm; card_h=lh+8*mm
-        card_x=cx-card_w/2; card_y=H-22*mm-card_h
-        # white rounded card behind the logo
-        cnv.setFillColor(HexColor('#ffffff')); cnv.roundRect(card_x, card_y, card_w, card_h, 6*mm, fill=1, stroke=0)
-        cnv.drawImage(logo, cx-lw/2, card_y+4*mm, lw, lh, mask='auto', preserveAspectRatio=True)
-        # brand name under the card
-        name_y = card_y - 9*mm
-        cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold', 18); cnv.drawCentredString(cx, name_y, 'AI with Rav')
-        logo_bottom = name_y - 4*mm
+def draw_cover(cnv,doc):
+    page_bg(cnv,doc,footer=False); cx=W/2
+    if os.path.exists(LOGO):
+        lr=PImage.open(LOGO); rat=lr.height/lr.width; lw=26*mm; lh=lw*rat
+        cw=lw+8*mm; ch=lh+8*mm; cxx=cx-cw/2; cy=H-22*mm-ch
+        cnv.setFillColor(HexColor('#ffffff')); cnv.roundRect(cxx,cy,cw,ch,6*mm,fill=1,stroke=0)
+        cnv.drawImage(LOGO,cx-lw/2,cy+4*mm,lw,lh,mask='auto',preserveAspectRatio=True)
+        ny=cy-9*mm; cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold',18); cnv.drawCentredString(cx,ny,'AI with Rav'); logo_bottom=ny-4*mm
     else:
-        cnv.setFillColor(SAF); cnv.roundRect(cx-11*mm, H-30*mm, 22*mm, 22*mm, 5*mm, fill=1, stroke=0)
-        cnv.setFillColor(BG); cnv.setFont('Helvetica-Bold', 20); cnv.drawCentredString(cx, H-23*mm, 'AI')
-        cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold', 15); cnv.drawCentredString(cx, H-40*mm, 'AI with Rav')
-        logo_bottom = H-44*mm
-    # photo circle — top-half portrait
-    py = logo_bottom - 10*mm
-    cnv.drawImage('brand/rav-circle.png', cx-30*mm, py-60*mm, 60*mm, 60*mm, mask='auto')
-    cnv.setStrokeColor(SAF); cnv.setLineWidth(2.5); cnv.circle(cx, py-30*mm, 30*mm, stroke=1, fill=0)
-    # title
-    ty = py-60*mm - 20*mm
-    cnv.setFillColor(SAF); cnv.setFont('Helvetica-Bold', 32); cnv.drawCentredString(cx, ty, 'MACHINE LEARNING')
-    cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold', 21); cnv.drawCentredString(cx, ty-13*mm, 'in 30 Days')
-    # day badge
-    by = ty-30*mm
-    cnv.setFillColor(TEAL); cnv.roundRect(cx-34*mm, by-9*mm, 68*mm, 15*mm, 7.5*mm, fill=1, stroke=0)
-    cnv.setFillColor(BG); cnv.setFont('Helvetica-Bold', 14); cnv.drawCentredString(cx, by-4*mm, 'DAY 1  ·  VIDEO 1')
-    cnv.setFillColor(MUT); cnv.setFont('Helvetica', 13); cnv.drawCentredString(cx, by-22*mm, 'What is Machine Learning, really?')
+        cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold',18); cnv.drawCentredString(cx,H-40*mm,'AI with Rav'); logo_bottom=H-44*mm
+    py=logo_bottom-10*mm
+    cnv.drawImage(CIRCLE,cx-30*mm,py-60*mm,60*mm,60*mm,mask='auto')
+    cnv.setStrokeColor(SAF); cnv.setLineWidth(2.5); cnv.circle(cx,py-30*mm,30*mm,stroke=1,fill=0)
+    ty=py-60*mm-20*mm
+    cnv.setFillColor(SAF); cnv.setFont('Helvetica-Bold',32); cnv.drawCentredString(cx,ty,'MACHINE LEARNING')
+    cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold',21); cnv.drawCentredString(cx,ty-13*mm,'in 30 Days')
+    by=ty-30*mm; cnv.setFillColor(TEAL); cnv.roundRect(cx-34*mm,by-9*mm,68*mm,15*mm,7.5*mm,fill=1,stroke=0)
+    cnv.setFillColor(BG); cnv.setFont('Helvetica-Bold',14); cnv.drawCentredString(cx,by-4*mm,f'DAY {DAY}  ·  VIDEO {VIDEO}')
+    cnv.setFillColor(MUT); cnv.setFont('Helvetica',13); cnv.drawCentredString(cx,by-22*mm,SUBTITLE or TITLE)
 
-# ---- build document ----
-def build(out='AI-with-Rav_Day-01_Machine-Learning.pdf'):
-    doc = BaseDocTemplate(out, pagesize=A4,
-        leftMargin=16*mm, rightMargin=16*mm, topMargin=18*mm, bottomMargin=18*mm)
-    frame = Frame(16*mm, 16*mm, W-32*mm, H-34*mm, id='main')
-    doc.addPageTemplates([
-        PageTemplate(id='cover', frames=[frame], onPage=draw_cover),
-        PageTemplate(id='body',  frames=[frame], onPage=page_bg),
-    ])
-    S=[]
-    from reportlab.platypus import NextPageTemplate, PageBreak
-    # cover page: a tiny invisible spacer holds the first (cover) page; then switch to body
-    S += [Spacer(1,1), NextPageTemplate('body'), PageBreak()]
+# ===== CONTENT PARSER (the only thing that varies per day) =====
+def parse(path):
+    raw=open(path).read()
+    meta={}; body=raw
+    m=re.match(r'---\n(.*?)\n---\n(.*)',raw,re.S)
+    if m:
+        for line in m.group(1).splitlines():
+            if ':' in line: k,v=line.split(':',1); meta[k.strip()]=v.strip()
+        body=m.group(2)
+    return meta, body.strip()
 
-    def h1(t): S.append(Paragraph(t,H1))
-    def h2(t): S.append(Paragraph(t,H2)); S.append(HRFlowable(width='100%',thickness=0.5,color=LINE,spaceAfter=6))
-    def p(t):  S.append(Paragraph(t,BODY))
-    def bullets(items):
-        for it in items: S.append(Paragraph('•&nbsp; '+it, BULL))
-        S.append(Spacer(1,4))
-    def img(path,cap=None,w=W-40*mm):
-        ir=PImage.open(path); ratio=ir.height/ir.width
-        S.append(Spacer(1,6)); S.append(Image(path,width=w,height=w*ratio))
-        if cap: S.append(Spacer(1,3)); S.append(Paragraph(cap,CAP))
-        S.append(Spacer(1,8))
-    def gap(h=6): S.append(Spacer(1,h))
+def build_flowables(body):
+    S=[Spacer(1,1), NextPageTemplate('body'), PageBreak()]
+    S.append(Paragraph(md(TITLE.replace('really?','<i>really?</i>')),H1))
+    lines=body.splitlines(); i=0
+    def para(t): S.append(Paragraph(md(t),BODY))
+    while i<len(lines):
+        ln=lines[i].rstrip()
+        if ln.startswith('@callout|'):
+            _,acc,txt=ln.split('|',2); S.append(callout(txt,ACCENT.get(acc,YEL))); S.append(Spacer(1,4))
+        elif ln.startswith('@h2|'):
+            S.append(Paragraph(md(ln[4:]),H2)); S.append(HRFlowable(width='100%',thickness=0.5,color=LINE,spaceAfter=6))
+        elif ln.startswith('@image|'):
+            parts=ln.split('|'); path=parts[1]; cap=parts[2] if len(parts)>2 else None
+            if os.path.exists(path):
+                ir=PImage.open(path); r=ir.height/ir.width; w=W-40*mm
+                S.append(Spacer(1,6)); S.append(Image(path,width=w,height=w*r))
+                if cap: S.append(Spacer(1,3)); S.append(Paragraph(cap,CAP))
+                S.append(Spacer(1,8))
+        elif ln=='@bullets':
+            i+=1
+            while i<len(lines) and lines[i].rstrip()!='@end':
+                if lines[i].strip(): S.append(Paragraph('•&nbsp; '+md(lines[i].strip()),BULL))
+                i+=1
+            S.append(Spacer(1,4))
+        elif ln=='@code':
+            i+=1; buf=[]
+            while i<len(lines) and lines[i].rstrip()!='@end': buf.append(lines[i]); i+=1
+            S.append(codeblock(buf)); S.append(Spacer(1,6))
+        elif ln=='@table':
+            i+=1; rows=[]
+            while i<len(lines) and lines[i].rstrip()!='@end':
+                if lines[i].strip(): rows.append([c.strip() for c in lines[i].split('|')])
+                i+=1
+            data=[[Paragraph(md(c),st('c',fontSize=10,textColor=(BG if r==0 else FG))) for c in row] for r,row in enumerate(rows)]
+            t=Table(data,colWidths=[(W-40*mm)/len(rows[0])]*len(rows[0]))
+            t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,0),TEAL),('FONTNAME',(0,0),(-1,0),'Helvetica-Bold'),
+                ('BACKGROUND',(0,1),(-1,-1),CARD),('ROWBACKGROUNDS',(0,1),(-1,-1),[CARD,HexColor('#11151b')]),
+                ('GRID',(0,0),(-1,-1),0.5,LINE),('LEFTPADDING',(0,0),(-1,-1),8),
+                ('TOPPADDING',(0,0),(-1,-1),6),('BOTTOMPADDING',(0,0),(-1,-1),6)]))
+            S.append(t); S.append(Spacer(1,8))
+        elif ln.strip():
+            para(ln)
+        i+=1
+    return S
 
-    h1('What is Machine Learning, <i>really?</i>')
-    S.append(callout(f'{hex_b("In One Line:")} Machine Learning is teaching a computer to learn patterns from examples — instead of you writing the rules by hand.', YEL)); gap(10)
+def main():
+    global DAY,VIDEO,TITLE,SUBTITLE
+    src=sys.argv[1] if len(sys.argv)>1 else 'days/day01.md'
+    meta,body=parse(src)
+    DAY=int(meta.get('day',1)); VIDEO=int(meta.get('video',DAY))
+    TITLE=meta.get('title',''); SUBTITLE=meta.get('subtitle',TITLE)
+    circle_crop(PHOTO,CIRCLE)
+    slug=re.sub(r'[^a-z0-9]+','-',TITLE.lower()).strip('-')[:40]
+    out=f"AI-with-Rav_Day-{DAY:02d}_{slug}.pdf"
+    doc=BaseDocTemplate(out,pagesize=A4,leftMargin=16*mm,rightMargin=16*mm,topMargin=18*mm,bottomMargin=18*mm)
+    frame=Frame(16*mm,16*mm,W-32*mm,H-34*mm,id='main')
+    doc.addPageTemplates([PageTemplate(id='cover',frames=[frame],onPage=draw_cover),
+                          PageTemplate(id='body',frames=[frame],onPage=page_bg)])
+    doc.build(build_flowables(body))
+    print("BUILT:",out)
 
-    h2('Start here: the chai stall')
-    p(f'Picture {hex_b("Ramesh")}, who runs a chai stall outside a Mumbai station.')
-    p('Nobody gave Ramesh a rulebook. But after 3 years, he <i>just knows:</i>')
-    chai_no = "nimbu paani sells, chai doesn't"
-    bullets([f'Rainy evening + train delayed → {hex_b("sell more chai, keep extra ginger")}',
-             f'Hot afternoon → {hex_b(chai_no)}',
-             f'Salary day (1st) → {hex_b("everyone buys, stock up")}'])
-    p(f'Ramesh was never <i>programmed</i>. He {hex_b("learned from thousands of days of examples.")}')
-    S.append(callout(f'{hex_b("That is Machine Learning.")} A machine, like Ramesh, looking at thousands of past examples and figuring out the pattern {hex_b("by itself")} — so it can predict the future.', GRN)); gap(10)
-
-    h2('The big shift: old way vs ML way')
-    p('This one picture is the entire reason ML exists:')
-    img('images/01-traditional-vs-ml.png','In normal coding YOU write the rules. In ML you give examples and the machine writes the rules itself.')
-    S.append(callout(f'{hex_b("The intuition:")} In normal coding, <i>you</i> are the smart one — you write every rule. In ML, you let the {hex_b("machine become smart")} by showing it examples.', GRN)); gap(6)
-    p(f'{hex_b("Why this is revolutionary:")} some problems have too many rules to ever write by hand. How would you write if-else rules to spot a cat in a photo? Impossible. But show a machine 10,000 cat photos and it learns "cat-ness" on its own.')
-
-    h2('How learning actually happens')
-    img('images/02-how-learning-happens.png','Data → Training → Model → Prediction. The "model" is just the pattern it learned.')
-
-    h2('You already use ML 20 times a day')
-    data=[['When you…','ML is quietly working'],
-          ['Open YouTube → perfect next video','Learned your watch history'],
-          ['GPay/PhonePe flags a fraud txn','Learned what fraud looks like'],
-          ['Instagram reels know you too well','Learned your scroll patterns'],
-          ['Gmail auto-sorts spam','Learned from billions of emails']]
-    t=Table(data,colWidths=[(W-40*mm)*0.5]*2)
-    t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,0),TEAL),('TEXTCOLOR',(0,0),(-1,0),BG),
-        ('FONTNAME',(0,0),(-1,0),'Helvetica-Bold'),('FONTSIZE',(0,0),(-1,-1),10),
-        ('TEXTCOLOR',(0,1),(-1,-1),FG),('BACKGROUND',(0,1),(-1,-1),CARD),
-        ('ROWBACKGROUNDS',(0,1),(-1,-1),[CARD,HexColor('#11151b')]),
-        ('GRID',(0,0),(-1,-1),0.5,LINE),('LEFTPADDING',(0,0),(-1,-1),8),
-        ('TOPPADDING',(0,0),(-1,-1),6),('BOTTOMPADDING',(0,0),(-1,-1),6)]))
-    S.append(t); gap(10)
-
-    h2('The Math  (technical — skip if non-technical, you lose nothing)')
-    p('Every ML model learns a <b>function</b> f that maps input X to output y:')
-    S.append(codeblock(['        y  =  f(X)','',
-        '   X = the inputs   (weather, time, crowd)  -> "features"',
-        '   y = the answer   (cups of chai sold)      -> "label"',
-        '   f = the pattern  (what the machine learns)-> the "model"']))
-    p(f'Training = adjusting f to shrink the gap between its guess and the truth. That gap is the {hex_b("loss")}. All of training is: "make the loss smaller."'); gap(6)
-
-    h2("Try it — your first model in 6 lines")
-    S.append(codeblock([
-        'from sklearn.linear_model import LinearRegression','',
-        'X = [[15],[20],[25],[30],[35]]   # temperature',
-        'y = [200,170,140,110,80]         # cups sold','',
-        'model = LinearRegression()',
-        'model.fit(X, y)                  # <- THIS is learning','',
-        'print(model.predict([[18]]))     # 18C -> ~182 cups']))
-    img('images/03-chai-regression.png','Orange dots = data. Blue line = what the model learned. Green star = a new prediction.')
-    S.append(callout(f'{hex_b("model.fit(X, y)")} is the entire heart of Machine Learning. Everything in the next 29 days is a more powerful version of it.', YEL)); gap(10)
-
-    h2('Recap — the 20-second version')
-    bullets(['ML = learning patterns from examples, not writing rules by hand.',
-             'Old way: you write rules. ML way: the machine finds the rules.',
-             'The learned pattern is called a model (y = f(X)).',
-             'You already use it 20× a day — YouTube, GPay, Instagram.',
-             'Training = making wrong guesses less wrong (shrinking the loss).'])
-    S.append(callout(f'{teal("Next up — Video 2:")} The 3 Families of ML: Supervised, Unsupervised, Reinforcement. Just like a child learns 3 ways — see you Day 2.', TEAL))
-
-    doc.build(S)
-    print('MASTER PDF built:', out)
-
-build()
+if __name__=='__main__': main()
