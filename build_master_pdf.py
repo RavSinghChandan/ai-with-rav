@@ -29,12 +29,18 @@ LINE = HexColor('#21262d')
 
 W, H = A4
 
-# ---- make a circular version of the photo ----
-def circle_crop(src, dst, size=520):
-    im = PImage.open(src).convert('RGBA')
-    s = min(im.size); im = im.crop(((im.width-s)//2,(im.height-s)//2,(im.width+s)//2,(im.height+s)//2)).resize((size,size))
+# ---- make a circular HEADSHOT from the standing portrait ----
+# The face sits at ~0.55 width, ~0.22 height in the source portrait. Crop a tight
+# square around the FACE (not a center crop, which would grab the torso).
+def circle_crop(src, dst, size=640, fcx=0.55, fcy=0.22, frac=0.30):
+    im = PImage.open(src).convert('RGBA'); w,h = im.size
+    side = int(h*frac)
+    cx, cy = int(w*fcx), int(h*fcy)
+    left = min(max(0, cx-side//2), w-side)
+    top  = min(max(0, cy-side//2), h-side)
+    im2 = im.crop((left, top, left+side, top+side)).resize((size,size))
     mask = PImage.new('L',(size,size),0); ImageDraw.Draw(mask).ellipse((0,0,size,size),fill=255)
-    out = PImage.new('RGBA',(size,size),(0,0,0,0)); out.paste(im,(0,0),mask); out.save(dst)
+    out = PImage.new('RGBA',(size,size),(0,0,0,0)); out.paste(im2,(0,0),mask); out.save(dst)
 circle_crop('brand/rav-photo.jpg','brand/rav-circle.png')
 
 # ---- styles ----
