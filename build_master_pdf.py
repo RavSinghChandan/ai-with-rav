@@ -117,9 +117,12 @@ def build_flowables(body):
                 print(f"  !! IMAGE NOT FOUND: {path}  (looked in {BASEDIR} and repo root)")
         elif ln=='@bullets':
             i+=1
-            while i<len(lines) and lines[i].rstrip()!='@end':
+            # auto-close on @end OR when the next @directive starts (forgiving if @end is missing)
+            while i<len(lines) and lines[i].rstrip()!='@end' and not lines[i].lstrip().startswith('@'):
                 if lines[i].strip(): S.append(Paragraph('•&nbsp; '+md(lines[i].strip()),BULL))
                 i+=1
+            if i<len(lines) and lines[i].lstrip().startswith('@') and lines[i].rstrip()!='@end':
+                i-=1   # step back so the next directive is processed normally
             S.append(Spacer(1,4))
         elif ln=='@code':
             i+=1; buf=[]
