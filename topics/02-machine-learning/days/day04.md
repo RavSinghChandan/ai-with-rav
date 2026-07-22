@@ -4,6 +4,7 @@ video: 4
 topic: Machine Learning
 title: Data — the fuel of Machine Learning
 subtitle: Features, labels, and why data beats fancy algorithms
+learn: Features (X) vs Labels (y) | Garbage in, garbage out | Why more data beats a fancy model | Feature engineering — the real magic
 ---
 
 @callout|yellow|In One Line: Data is the fuel of ML. The inputs are called features (X), the answer is the label (y). Better data beats a smarter algorithm — every time.

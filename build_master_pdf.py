@@ -14,12 +14,13 @@ from reportlab.platypus import (BaseDocTemplate, PageTemplate, Frame, Paragraph,
 from reportlab.lib.styles import ParagraphStyle
 from PIL import Image as PImage, ImageDraw
 
-# ===== FROZEN BRAND (never changes) =====
-BG=HexColor('#0d1117'); CARD=HexColor('#161b22'); FG=HexColor('#e6edf3'); MUT=HexColor('#9fb3c8')
-SAF=HexColor('#FF6B35'); TEAL=HexColor('#33B5E5'); GRN=HexColor('#06D6A0'); YEL=HexColor('#FFD166'); LINE=HexColor('#21262d')
+# ===== FROZEN BRAND (never changes) — WARM CHARCOAL-BROWN PREMIUM =====
+BG=HexColor('#1a1512'); CARD=HexColor('#241d18'); FG=HexColor('#f0e6d8'); MUT=HexColor('#b3a595')
+SAF=HexColor('#FF7A3D'); TEAL=HexColor('#4EC5E8'); GRN=HexColor('#3dd4a8'); YEL=HexColor('#FFCF6B'); LINE=HexColor('#3a2f26')
+GOLD=HexColor('#E0B265')
 ACCENT={'yellow':YEL,'green':GRN,'teal':TEAL,'saffron':SAF}
 W,H=A4
-LOGO='brand/ai-for-business-logo.png'; PHOTO='brand/rav-photo.jpg'; CIRCLE='brand/rav-circle.png'
+LOGO='brand/ai-for-business-logo.png'; PHOTO='brand/rav-photo.jpg'; CIRCLE='brand/rav-circle.png'; WMARK='brand/logo-watermark.png'
 
 def circle_crop(src,dst,size=680,fcx=0.55,top_frac=0.06,frac=0.52):
     im=PImage.open(src).convert('RGBA'); w,h=im.size; side=int(h*frac); cx=int(w*fcx)
@@ -31,7 +32,7 @@ def circle_crop(src,dst,size=680,fcx=0.55,top_frac=0.06,frac=0.52):
 def st(n,**k):
     b=dict(fontName='Helvetica',fontSize=11.5,leading=17,textColor=FG,spaceAfter=6); b.update(k); return ParagraphStyle(n,**b)
 H1=st('H1',fontName='Helvetica-Bold',fontSize=22,leading=26,textColor=SAF,spaceAfter=4)
-H2=st('H2',fontName='Helvetica-Bold',fontSize=15,leading=19,textColor=TEAL,spaceBefore=14,spaceAfter=6)
+H2=st('H2',fontName='Helvetica-Bold',fontSize=15,leading=19,textColor=GOLD,spaceBefore=14,spaceAfter=6)
 BODY=st('BODY'); BULL=st('BULL',leftIndent=14,bulletIndent=2)
 NOTE=st('NOTE'); CODE=st('CODE',fontName='Courier',fontSize=9.5,leading=13); CAP=st('CAP',fontSize=9.5,leading=13,textColor=MUT,alignment=1)
 
@@ -47,38 +48,81 @@ def callout(text,accent):
 def codeblock(lines):
     p=Paragraph('<br/>'.join(l.replace(' ','&nbsp;') for l in lines),CODE)
     t=Table([[p]],colWidths=[W-32*mm-8*mm])
-    t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,-1),HexColor('#0b0e13')),('BOX',(0,0),(-1,-1),0.5,LINE),
+    t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,-1),HexColor('#140f0c')),('BOX',(0,0),(-1,-1),0.5,LINE),
         ('LEFTPADDING',(0,0),(-1,-1),12),('RIGHTPADDING',(0,0),(-1,-1),12),
         ('TOPPADDING',(0,0),(-1,-1),10),('BOTTOMPADDING',(0,0),(-1,-1),10)])); return t
 
-DAY=1; VIDEO=1; TITLE=''; SUBTITLE=''; TOPIC='MACHINE LEARNING'
+DAY=1; VIDEO=1; TITLE=''; SUBTITLE=''; TOPIC='MACHINE LEARNING'; LEARN=[]; BASEDIR='.'
+
+def _brand_watermark(cnv):
+    # faint centered logo watermark on every page
+    if os.path.exists(WMARK):
+        wr=PImage.open(WMARK); rat=wr.height/wr.width; ww=110*mm; wh=ww*rat
+        cnv.drawImage(WMARK, W/2-ww/2, H/2-wh/2, ww, wh, mask='auto', preserveAspectRatio=True)
+
+def _corner_photo(cnv):
+    # small circular photo in bottom-right of every content page
+    if os.path.exists(CIRCLE):
+        d=15*mm
+        cnv.drawImage(CIRCLE, W-16*mm-d, 15*mm, d, d, mask='auto')
+        cnv.setStrokeColor(GOLD); cnv.setLineWidth(1.2); cnv.circle(W-16*mm-d/2, 15*mm+d/2, d/2, stroke=1, fill=0)
+
 def page_bg(cnv,doc,footer=True):
     cnv.setFillColor(BG); cnv.rect(0,0,W,H,fill=1,stroke=0)
+    _brand_watermark(cnv)
     if not footer: return
+    _corner_photo(cnv)
     cnv.setFillColor(MUT); cnv.setFont('Helvetica',8)
-    cnv.drawString(16*mm,10*mm,'AI with Rav  ·  Machine Learning in 30 Days')
-    cnv.drawRightString(W-16*mm,10*mm,f'Day {DAY}')
-    cnv.setStrokeColor(LINE); cnv.setLineWidth(0.5); cnv.line(16*mm,13*mm,W-16*mm,13*mm)
+    cnv.drawString(16*mm,10*mm,f'AI with Rav  ·  {TOPIC.title()} in 30 Days')
+    cnv.drawRightString(W-16*mm-18*mm,10*mm,f'Day {DAY}')
+    cnv.setStrokeColor(LINE); cnv.setLineWidth(0.5); cnv.line(16*mm,13*mm,W-34*mm,13*mm)
 
 def draw_cover(cnv,doc):
-    page_bg(cnv,doc,footer=False); cx=W/2
+    cnv.setFillColor(BG); cnv.rect(0,0,W,H,fill=1,stroke=0)
+    _brand_watermark(cnv)
+    cx=W/2
+    # --- top brand strip: small logo card + name (left) , small photo (right) ---
     if os.path.exists(LOGO):
-        lr=PImage.open(LOGO); rat=lr.height/lr.width; lw=26*mm; lh=lw*rat
-        cw=lw+8*mm; ch=lh+8*mm; cxx=cx-cw/2; cy=H-22*mm-ch
-        cnv.setFillColor(HexColor('#ffffff')); cnv.roundRect(cxx,cy,cw,ch,6*mm,fill=1,stroke=0)
-        cnv.drawImage(LOGO,cx-lw/2,cy+4*mm,lw,lh,mask='auto',preserveAspectRatio=True)
-        ny=cy-9*mm; cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold',18); cnv.drawCentredString(cx,ny,'AI with Rav'); logo_bottom=ny-4*mm
-    else:
-        cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold',18); cnv.drawCentredString(cx,H-40*mm,'AI with Rav'); logo_bottom=H-44*mm
-    py=logo_bottom-10*mm
-    cnv.drawImage(CIRCLE,cx-30*mm,py-60*mm,60*mm,60*mm,mask='auto')
-    cnv.setStrokeColor(SAF); cnv.setLineWidth(2.5); cnv.circle(cx,py-30*mm,30*mm,stroke=1,fill=0)
-    ty=py-60*mm-20*mm
-    cnv.setFillColor(SAF); cnv.setFont('Helvetica-Bold',32); cnv.drawCentredString(cx,ty,TOPIC.upper())
-    cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold',21); cnv.drawCentredString(cx,ty-13*mm,'with Rav')
-    by=ty-30*mm; cnv.setFillColor(TEAL); cnv.roundRect(cx-34*mm,by-9*mm,68*mm,15*mm,7.5*mm,fill=1,stroke=0)
-    cnv.setFillColor(BG); cnv.setFont('Helvetica-Bold',14); cnv.drawCentredString(cx,by-4*mm,f'DAY {DAY}  ·  VIDEO {VIDEO}')
-    cnv.setFillColor(MUT); cnv.setFont('Helvetica',13); cnv.drawCentredString(cx,by-22*mm,SUBTITLE or TITLE)
+        lr=PImage.open(LOGO); rat=lr.height/lr.width; lw=20*mm; lh=lw*rat
+        cnv.setFillColor(HexColor('#ffffff')); cnv.roundRect(18*mm, H-20*mm-lh-4*mm, lw+6*mm, lh+8*mm, 4*mm, fill=1, stroke=0)
+        cnv.drawImage(LOGO, 21*mm, H-20*mm-lh, lw, lh, mask='auto', preserveAspectRatio=True)
+    cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold',15); cnv.drawString(48*mm, H-28*mm, 'AI with Rav')
+    cnv.setFillColor(GOLD); cnv.setFont('Helvetica',9.5); cnv.drawString(48*mm, H-33*mm, 'Learn AI the way you actually think.')
+    if os.path.exists(CIRCLE):
+        d=22*mm; cnv.drawImage(CIRCLE, W-18*mm-d, H-20*mm-d, d, d, mask='auto')
+        cnv.setStrokeColor(SAF); cnv.setLineWidth(1.6); cnv.circle(W-18*mm-d/2, H-20*mm-d/2, d/2, stroke=1, fill=0)
+    # --- DAY badge ---
+    by=H-58*mm
+    cnv.setFillColor(GOLD); cnv.roundRect(18*mm, by, 52*mm, 12*mm, 6*mm, fill=1, stroke=0)
+    cnv.setFillColor(BG); cnv.setFont('Helvetica-Bold',12); cnv.drawCentredString(18*mm+26*mm, by+3.6*mm, f'DAY {DAY}  of 30')
+    # progress dots
+    for k in range(1,31):
+        fx=76*mm+((k-1)%15)*8.0*mm/1.0*0  # keep simple: skip dot row (avoid clutter)
+    # --- BIG topic title (the hero) ---
+    cnv.setFillColor(SAF); cnv.setFont('Helvetica-Bold',30); cnv.drawString(18*mm, by-16*mm, TOPIC.upper())
+    # the day's specific title, wrapped
+    from reportlab.lib.utils import simpleSplit
+    cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold',19)
+    lines=simpleSplit(TITLE, 'Helvetica-Bold', 19, W-36*mm)
+    yy=by-28*mm
+    for ln in lines[:3]:
+        cnv.drawString(18*mm, yy, ln); yy-=8.5*mm
+    # --- "What you'll learn" box ---
+    box_y=yy-8*mm
+    items=LEARN[:5] if LEARN else []
+    if items:
+        bh=14*mm+len(items)*8*mm
+        cnv.setFillColor(CARD); cnv.roundRect(18*mm, box_y-bh, W-36*mm, bh, 5*mm, fill=1, stroke=0)
+        cnv.setStrokeColor(TEAL); cnv.setLineWidth(2); cnv.line(18*mm, box_y-8*mm, 18*mm, box_y-bh+4*mm)
+        cnv.setFillColor(TEAL); cnv.setFont('Helvetica-Bold',13); cnv.drawString(25*mm, box_y-9*mm, "WHAT YOU'LL LEARN TODAY")
+        cnv.setFillColor(FG); cnv.setFont('Helvetica',12)
+        ly=box_y-18*mm
+        for it in items:
+            cnv.setFillColor(SAF); cnv.drawString(25*mm, ly, '›')
+            cnv.setFillColor(FG); cnv.drawString(30*mm, ly, it); ly-=8*mm
+    # footer brand line
+    cnv.setFillColor(MUT); cnv.setFont('Helvetica',9)
+    cnv.drawCentredString(cx, 16*mm, 'youtube.com/@aiwithrav  ·  A premium AI learning series')
 
 # ===== CONTENT PARSER (the only thing that varies per day) =====
 def parse(path):
@@ -136,7 +180,7 @@ def build_flowables(body):
             data=[[Paragraph(md(c),st('c',fontSize=10,textColor=(BG if r==0 else FG))) for c in row] for r,row in enumerate(rows)]
             t=Table(data,colWidths=[(W-40*mm)/len(rows[0])]*len(rows[0]))
             t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,0),TEAL),('FONTNAME',(0,0),(-1,0),'Helvetica-Bold'),
-                ('BACKGROUND',(0,1),(-1,-1),CARD),('ROWBACKGROUNDS',(0,1),(-1,-1),[CARD,HexColor('#11151b')]),
+                ('BACKGROUND',(0,1),(-1,-1),CARD),('ROWBACKGROUNDS',(0,1),(-1,-1),[CARD,HexColor('#1c1611')]),
                 ('GRID',(0,0),(-1,-1),0.5,LINE),('LEFTPADDING',(0,0),(-1,-1),8),
                 ('TOPPADDING',(0,0),(-1,-1),6),('BOTTOMPADDING',(0,0),(-1,-1),6)]))
             S.append(t); S.append(Spacer(1,8))
@@ -146,7 +190,7 @@ def build_flowables(body):
     return S
 
 def main():
-    global DAY,VIDEO,TITLE,SUBTITLE,TOPIC,BASEDIR
+    global DAY,VIDEO,TITLE,SUBTITLE,TOPIC,BASEDIR,LEARN
     src=sys.argv[1] if len(sys.argv)>1 else 'days/day01.md'
     # BASEDIR = the topic folder (content file is in <topic>/days/, images in <topic>/images/)
     BASEDIR=os.path.dirname(os.path.dirname(os.path.abspath(src)))  # up from days/ to topic root
@@ -154,6 +198,8 @@ def main():
     DAY=int(meta.get('day',1)); VIDEO=int(meta.get('video',DAY))
     TITLE=meta.get('title',''); SUBTITLE=meta.get('subtitle',TITLE)
     TOPIC=meta.get('topic','MACHINE LEARNING')
+    # "learn" front-matter: pipe-separated bullets for the cover "What you'll learn" box
+    LEARN=[x.strip() for x in meta.get('learn','').split('|') if x.strip()]
     circle_crop(PHOTO,CIRCLE)
     slug=re.sub(r'[^a-z0-9]+','-',TITLE.lower()).strip('-')[:40]
     # write the PDF INTO the topic folder so each topic keeps its own PDFs
