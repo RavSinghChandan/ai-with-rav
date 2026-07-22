@@ -13,6 +13,12 @@ Each video = a `.md` file (renders on GitHub) **and** a `.pdf` (Rav teaches from
 - Diagrams stay dark-themed (see below), generated into the topic's `images/` folder, VIEWED before pushing.
 - When writing a new day: list the @h2 sections FIRST, then make sure each conceptual one has an `@image|...`. If a section has none, generate one.
 
+## ✅ DIAGRAM-CORRECTNESS RULE (added 2026-07-22 — learned the hard way, NEVER repeat)
+**A diagram must actually SHOW the concept it claims — not just render cleanly.** VIEW every generated image and ask: "does this visually prove the point the caption/legend promises?" If the legend says "error/residual" the error gaps MUST be visibly large; if it says "overlap" the overlap must be visible; if it shows a comparison the difference must be obvious.
+- **The mistake that triggered this (Day 5 residuals):** the legend showed "Error (residual)" dashed lines, but the data points sat almost ON the line, so the error gaps were invisible — the diagram promised something it didn't show. Rav caught it. Do NOT let a diagram legend/caption describe an element that isn't clearly visible.
+- Rule: after generating each image, look at it and confirm EVERY labelled element (legend entry, arrow, annotation) is actually visible and teaches its point. If not, regenerate with exaggerated/clearer data so the teaching element is obvious.
+- "Renders without error" is NOT the bar. "A student instantly sees the concept" is the bar.
+
 ---
 
 ## PDF LOOK — PREMIUM WARM (approved 2026-07-22, LOCKED). This is the LinkedIn-viral standard.
