@@ -16,6 +16,7 @@ day: 2
 video: 2
 title: The 3 Families of Machine Learning
 subtitle: Supervised, Unsupervised, Reinforcement
+learn: point one | point two | point three | point four
 ---
 
 @callout|yellow|In One Line: ...text...

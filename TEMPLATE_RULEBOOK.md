@@ -15,12 +15,32 @@ Each video = a `.md` file (renders on GitHub) **and** a `.pdf` (Rav teaches from
 
 ---
 
-## PDF LOOK (non-negotiable)
-1. **BLACK / dark background** — `#0d1117`. Never white. Audience reads it on screen for minutes.
-2. **Soft off-white text** — `#e6edf3` (not harsh pure white).
-3. **Accent colors:** saffron `#FF6B35` (H1), teal `#33B5E5` (H2), green `#06D6A0`, yellow `#FFD166`. Warm, high-engagement, Indian-audience friendly.
-4. **Images on DARK background** — every diagram/chart redrawn dark so it blends into the page. No white rectangles breaking the flow.
-5. **Code blocks** — slightly lighter dark card `#161b22`, light text. Crisp, selectable (real fonts, never blurry).
+## PDF LOOK — PREMIUM WARM (approved 2026-07-22, LOCKED). This is the LinkedIn-viral standard.
+1. **WARM CHARCOAL-BROWN background** — `#1a1512` (cards `#241d18`). NOT black, NOT white. Premium, easy on eyes, "expensive notebook" feel. This replaced the old flat black.
+2. **Cream text** — `#f0e6d8` (warm, not harsh white). Muted `#b3a595`.
+3. **Accents:** saffron `#FF7A3D` (H1 topic), **gold `#E0B265` (H2 headers + day badge)**, teal `#4EC5E8`, green `#3dd4a8`, yellow `#FFCF6B`. Warm, premium, Indian-audience friendly.
+4. **Images on the warm-dark background** — every diagram redrawn dark so it blends. No white rectangles.
+5. **Code blocks** — `#140f0c` card, cream text. Crisp, selectable.
+
+## BRANDING ON EVERY PAGE (LOCKED — makes it unmistakably Rav's, screenshot-proof)
+- **Faint logo watermark** centered on EVERY page (`brand/logo-watermark.png`, ~7% opacity, 110mm). Subtle, never blocks text.
+- **Small circular photo** bottom-right corner of every content page (15mm, gold ring).
+- Footer: "AI with Rav · <Topic> in 30 Days · Day N" (NO links in footer body).
+
+## THE COVER (page 1) — TOPIC-LED, sells what they'll LEARN (LOCKED)
+Leads with the VALUE, not the photo. Layout top→bottom:
+- Top strip: small logo (white card) + "AI with Rav / Learn AI the way you actually think" (left), small circular photo (right).
+- Gold **"DAY N of 30"** badge.
+- HUGE saffron **TOPIC** (e.g. "MACHINE LEARNING") + the day's specific title below in cream.
+- **"WHAT YOU'LL LEARN TODAY"** card (teal accent bar) with 3–5 `›` bullets — from the `learn:` front-matter field (pipe-separated). THIS is the hook; viewer instantly sees the value.
+- Footer: "youtube.com/@aiwithrav · A premium AI learning series".
+- Photo is SECONDARY now — the topic + learn-list dominate. (Old cover was photo-centric; that's retired.)
+
+### Content-file addition: the `learn:` front-matter field (required for cover)
+```
+learn: Features (X) vs Labels (y) | Garbage in, garbage out | Why more data beats a fancy model | Feature engineering
+```
+Pipe-separated, 3–5 short items = the "What you'll learn today" cover bullets.
 
 ## WHAT TO REMOVE from the PDF (clutter — cut every time)
 - ❌ **Navigation links** — "Back to the map", "Watch on YouTube", any `[text](link)`. A PDF is not a webpage. Strip all markdown links → keep just the text.
