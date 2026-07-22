@@ -26,13 +26,14 @@ Two words you'll hear a thousand times — learn them now:
 Real-world data is *always* messy:
 @bullets
 **Missing values** → some days the temperature wasn't recorded
-**Wrong units** → some prices in ₹, some in lakhs
+**Wrong units** → some prices in rupees, some in lakhs
 **Typos & duplicates** → "Mumbai", "mumbai", "Bombay" all mean the same city
 **Outliers** → one day sold 50,000 cups (a wedding order) — misleads the model
 @end
 @callout|red|This is why ML engineers spend ~80% of their time cleaning data, not tuning models. It's unglamorous, but it's where accuracy is actually won or lost.
 
 @h2|More data usually beats a cleverer model
+@image|images/10-more-data.png|A simple model fed lots of good data (blue) catches up to and beats a fancy model with little data.
 A famous result in ML: throw *more good examples* at a simple model and it often beats a complex model with little data. Why? Because the model learns the pattern from examples — more examples = a clearer pattern.
 @bullets
 100 chai-sales days → the model has a rough idea
@@ -41,6 +42,7 @@ A famous result in ML: throw *more good examples* at a simple model and it often
 @callout|green|Rule of thumb: before reaching for a fancier algorithm, first ask — "can I get more data, or cleaner data?" That usually helps more.
 
 @h2|Good features = the real magic
+@image|images/11-feature-engineering.png|A raw date is useless to the model. Engineer it into clues (is_weekend, is_salary_day, month) and now it can learn.
 Sometimes the raw data isn't enough — you *create* better features. This is called **feature engineering** (a whole video later).
 @bullets
 Raw: a date "2026-07-22" → useless to the model as-is

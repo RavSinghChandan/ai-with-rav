@@ -6,6 +6,15 @@ Each video = a `.md` file (renders on GitHub) **and** a `.pdf` (Rav teaches from
 
 ---
 
+## 🖼 IMAGE RULE (added 2026-07-22, non-negotiable) — ONE IMAGE PER MAJOR SECTION
+**Every major @h2 teaching section that explains a CONCEPT must have its own diagram.** Do NOT ship a PDF with only 2 images. Rav's words: "as many topics there are, that many images there should be." Target: a visual for EACH concept section (typically 4–6 images per video, not 2).
+- Section explains an idea → it needs a diagram that shows that idea (not just text).
+- The only sections that may skip an image: the "In One Line" callout, the recap, and pure code/story intros.
+- Diagrams stay dark-themed (see below), generated into the topic's `images/` folder, VIEWED before pushing.
+- When writing a new day: list the @h2 sections FIRST, then make sure each conceptual one has an `@image|...`. If a section has none, generate one.
+
+---
+
 ## PDF LOOK (non-negotiable)
 1. **BLACK / dark background** — `#0d1117`. Never white. Audience reads it on screen for minutes.
 2. **Soft off-white text** — `#e6edf3` (not harsh pure white).
