@@ -4,6 +4,7 @@ video: 3
 topic: Machine Learning
 title: The ML Workflow — how a model is really built
 subtitle: From raw data to a working model, step by step
+learn: The real 7-step ML workflow | Why 80% of the work is data | The golden rule: train/test split | Why ML is an iterative loop
 ---
 
 @callout|yellow|In One Line: A real ML model isn't just "train it." It's a 7-step recipe — collect, clean, split, choose, train, evaluate, deploy. Skip a step and it breaks.

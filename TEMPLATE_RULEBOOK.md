@@ -30,8 +30,11 @@ Each video = a `.md` file (renders on GitHub) **and** a `.pdf` (Rav teaches from
 
 ## BRANDING ON EVERY PAGE (LOCKED — makes it unmistakably Rav's, screenshot-proof)
 - **Faint logo watermark** centered on EVERY page (`brand/logo-watermark.png`, ~7% opacity, 110mm). Subtle, never blocks text.
-- **Small circular photo** bottom-right corner of every content page (15mm, gold ring).
+- **Small circular photo** in the FOOTER BAND bottom-right (11mm, gold ring), aligned with footer text, at y≈7.5mm.
 - Footer: "AI with Rav · <Topic> in 30 Days · Day N" (NO links in footer body).
+
+### ⚠️ CORNER-PHOTO / FOOTER NO-OVERLAP RULE (added 2026-07-23 — never repeat)
+The corner photo and footer must sit BELOW the content frame — **body text must NEVER overlap the photo.** (Day 5 bug: photo was 15mm tall at y=15mm reaching up to 30mm, but the text frame bottom was 16mm → the last-page text overlapped the photo.) FIX that is now locked in the template: content `Frame` bottom = **22mm** (`Frame(16mm,22mm,W-32mm,H-40mm)`), photo tucked at y≈7.5mm size 11mm (fully inside the footer margin). ALWAYS view the LAST content page (where text runs longest) to confirm no overlap before pushing.
 
 ## THE COVER (page 1) — TOPIC-LED, sells what they'll LEARN (LOCKED)
 Leads with the VALUE, not the photo. Layout top→bottom:

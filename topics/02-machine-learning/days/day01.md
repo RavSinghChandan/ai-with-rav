@@ -4,6 +4,7 @@ topic: Machine Learning
 video: 1
 title: What is Machine Learning, really?
 subtitle: What is Machine Learning, really?
+learn: What Machine Learning really is | Old way vs ML way | How a machine learns from examples | You already use ML 20x a day
 ---
 
 @callout|yellow|In One Line: Machine Learning is teaching a computer to learn patterns from examples — instead of you writing the rules by hand.

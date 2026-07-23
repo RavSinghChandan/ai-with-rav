@@ -4,6 +4,7 @@ video: 2
 topic: Machine Learning
 title: The 3 Families of Machine Learning
 subtitle: Supervised, Unsupervised, Reinforcement
+learn: The 3 families of ML | Supervised = learn with a teacher | Unsupervised = find hidden groups | Reinforcement = learn by reward
 ---
 
 @callout|yellow|In One Line: A machine learns in 3 ways — with a teacher, by exploring on its own, or by reward & punishment. Just like a child.

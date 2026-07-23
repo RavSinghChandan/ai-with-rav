@@ -61,11 +61,13 @@ def _brand_watermark(cnv):
         cnv.drawImage(WMARK, W/2-ww/2, H/2-wh/2, ww, wh, mask='auto', preserveAspectRatio=True)
 
 def _corner_photo(cnv):
-    # small circular photo in bottom-right of every content page
+    # small circular photo tucked into the FOOTER band (below the content frame,
+    # aligned with the footer text) so it NEVER overlaps body text.
     if os.path.exists(CIRCLE):
-        d=15*mm
-        cnv.drawImage(CIRCLE, W-16*mm-d, 15*mm, d, d, mask='auto')
-        cnv.setStrokeColor(GOLD); cnv.setLineWidth(1.2); cnv.circle(W-16*mm-d/2, 15*mm+d/2, d/2, stroke=1, fill=0)
+        d=11*mm
+        y=7.5*mm            # centred on the footer line (~10mm), fully below the 16mm frame
+        cnv.drawImage(CIRCLE, W-16*mm-d, y, d, d, mask='auto')
+        cnv.setStrokeColor(GOLD); cnv.setLineWidth(1.1); cnv.circle(W-16*mm-d/2, y+d/2, d/2, stroke=1, fill=0)
 
 def page_bg(cnv,doc,footer=True):
     cnv.setFillColor(BG); cnv.rect(0,0,W,H,fill=1,stroke=0)
@@ -204,8 +206,9 @@ def main():
     slug=re.sub(r'[^a-z0-9]+','-',TITLE.lower()).strip('-')[:40]
     # write the PDF INTO the topic folder so each topic keeps its own PDFs
     out=os.path.join(BASEDIR, f"AI-with-Rav_Day-{DAY:02d}_{slug}.pdf")
-    doc=BaseDocTemplate(out,pagesize=A4,leftMargin=16*mm,rightMargin=16*mm,topMargin=18*mm,bottomMargin=18*mm)
-    frame=Frame(16*mm,16*mm,W-32*mm,H-34*mm,id='main')
+    doc=BaseDocTemplate(out,pagesize=A4,leftMargin=16*mm,rightMargin=16*mm,topMargin=18*mm,bottomMargin=22*mm)
+    # frame bottom raised to 22mm so body text NEVER reaches the footer band / corner photo (fixes overlap)
+    frame=Frame(16*mm,22*mm,W-32*mm,H-40*mm,id='main')
     doc.addPageTemplates([PageTemplate(id='cover',frames=[frame],onPage=draw_cover),
                           PageTemplate(id='body',frames=[frame],onPage=page_bg)])
     doc.build(build_flowables(body))
