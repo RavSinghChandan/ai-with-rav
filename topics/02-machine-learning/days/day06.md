@@ -4,7 +4,7 @@ video: 6
 topic: Machine Learning
 title: Logistic Regression — the yes/no brain
 subtitle: How the spam filter decides, and every yes/no prediction
-learn: When to use Logistic vs Linear Regression | The S-curve (sigmoid) that gives a probability | How the 0.5 threshold turns probability into YES/NO | Train a spam classifier in a few lines
+learn: When to use Logistic vs Linear Regression | The sigmoid S-curve + its formula | Why it's called "regression" (the surprise answer) | How the 0.5 threshold turns probability into YES/NO
 ---
 
 @callout|yellow|In One Line: Logistic Regression answers YES/NO questions. Spam or not? Pass or fail? Fraud or safe? It gives a probability, then a threshold decides.
@@ -29,6 +29,25 @@ A very "spammy" email → score is high → sigmoid pushes it near **1** (almost
 A clearly normal email → score is low → sigmoid pushes it near **0** (not spam)
 @end
 @callout|green|The sigmoid is the whole trick. It turns "how spammy is this?" (a raw score) into "what's the probability it's spam?" (a clean number between 0 and 1).
+
+@h2|The formula (for the curious — skip if you like)
+@image|images/18-sigmoid-formula.png|The sigmoid formula. Notice z = mx + c is the exact same line from Day 5 — the sigmoid just wraps around it.
+Here's the actual formula behind the S-curve. Don't be scared — it's simpler than it looks:
+@bullets
+**z = m·x + c** → this is literally the **same straight line from Day 5** (Linear Regression's line).
+**P = 1 / (1 + e^(-z))** → we feed that line's score `z` into this, and out comes a probability `P` between 0 and 1.
+**e** → just a fixed number (2.718...), like π. Nothing to memorise.
+@end
+@callout|green|The big idea: Logistic Regression = Linear Regression's straight line, wrapped in a sigmoid. Same `mx + c`, then squashed to a 0–1 probability. That's the entire difference. Technical folks: this is why it's linear "under the hood." Non-technical folks: just remember — it's the same line, made into a yes/no.
+
+@h2|Wait — why is it called "regression" if it's yes/no?
+Great question, and almost no course explains it. "Regression" usually means predicting a number — so why call a yes/no method "regression"?
+@bullets
+Because under the hood, it **first predicts a number** — the probability (like 0.94). That part IS regression (predicting a number between 0 and 1).
+Only at the **very end** does the threshold turn that number into yes/no.
+So the name comes from the *middle* step: it **regresses a probability**, then classifies. The classification is bolted on top.
+@end
+@callout|yellow|One-line answer: it's called regression because it predicts a **probability** (a number) first — the yes/no decision is just the final step on top of that. So it's really "probability regression, then a cutoff."
 
 @h2|The threshold: turning probability into a decision
 @image|images/17-threshold.png|The model gives a probability; the 0.5 threshold turns it into a final YES or NO.
