@@ -75,6 +75,7 @@ Basket of **only mangoes** → not mixed at all → **Gini = 0** (perfect, clean
 
 @h2|The Gini formula — but really simple
 Here's the formula. Don't run away — it's easier than it looks, and it's the same fruit basket:
+@image|images/24-gini-formula.png|The Gini formula worked out on our half-and-half basket: 1 − (½)² − (½)² = 0.5.
 @callout|yellow|**Gini = 1 − (chance of picking a mango)² − (chance of picking an apple)²**
 Let's just plug in our baskets:
 @bullets
@@ -86,6 +87,7 @@ Let's just plug in our baskets:
 
 @h2|So how does it choose? (still the basket)
 At every step the tree tries every question and asks: *"After this split, are my two baskets cleaner than before?"* It picks the question that drops the Gini the most.
+@image|images/25-how-it-chooses.png|A good question ("Is it orange?") turns one mixed basket into two clean baskets. That drop in mess is called information gain.
 @bullets
 Before the split → one messy basket (high Gini).
 After a **good** question → two cleaner baskets (lower Gini) → the tree keeps it.
