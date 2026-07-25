@@ -16,14 +16,14 @@ def draw_basket(ax,cx,cy,fruits,w=2.6,h=2.2):
 fig,ax=plt.subplots(figsize=(11,4.8)); ax.set_xlim(0,12); ax.set_ylim(0,6); ax.axis('off'); fig.patch.set_facecolor(BG)
 ax.text(6,5.6,'The Gini formula — on our half-and-half basket',ha='center',fontsize=13,fontweight='bold',color=FG)
 draw_basket(ax,2.3,3.2,[SAF,SAF,SAF,GRN,GRN,GRN])
-ax.text(2.3,1.7,'3 mangoes, 3 apples',ha='center',fontsize=10,color=FG,fontweight='bold')
+ax.text(2.3,1.7,'3 orange, 3 green',ha='center',fontsize=10,color=FG,fontweight='bold')
 # the formula worked out, step by step, to the right
 ax.text(5.0,4.2,'Gini = 1',ha='left',fontsize=15,color=SAF,fontweight='bold')
-ax.text(5.0,3.3,'− (chance of mango)²',ha='left',fontsize=13,color=SAF)
-ax.text(5.0,2.5,'− (chance of apple)²',ha='left',fontsize=13,color=SAF)
+ax.text(5.0,3.3,'− (chance of orange)²',ha='left',fontsize=13,color=SAF)
+ax.text(5.0,2.5,'− (chance of green)²',ha='left',fontsize=13,color=SAF)
 ax.text(5.0,1.5,'= 1 − (½)² − (½)²  =  0.5',ha='left',fontsize=14,color=YEL,fontweight='bold')
 # annotate the ½
-ax.annotate('half are mangoes\nso chance = ½',xy=(7.4,3.3),xytext=(9.3,4.2),fontsize=9.5,color=TEAL,ha='center',arrowprops=dict(arrowstyle='->',color=TEAL,lw=1.2))
+ax.annotate('half are orange\nso chance = ½',xy=(7.4,3.3),xytext=(9.3,4.2),fontsize=9.5,color=TEAL,ha='center',arrowprops=dict(arrowstyle='->',color=TEAL,lw=1.2))
 ax.text(6,0.5,'Fully mixed basket → Gini 0.5 (the worst). A clean basket would give 0.',ha='center',fontsize=9.5,color=MUT,style='italic')
 plt.tight_layout(); plt.savefig('topics/02-machine-learning/images/24-gini-formula.png',dpi=150,facecolor=BG,bbox_inches='tight'); plt.close()
 
@@ -40,9 +40,9 @@ ax.text(5.8,3.95,'Is it\norange?',ha='center',va='center',color='#1a1512',fontsi
 ax.add_patch(FancyArrowPatch((3.7,4.0),(4.7,4.0),arrowstyle='-|>',mutation_scale=18,lw=2,color=FG))
 # after: two clean baskets
 draw_basket(ax,9.2,5.2,[SAF,SAF,SAF],w=2.2,h=1.7)
-ax.text(9.2,4.05,'all mangoes (Gini 0) ✔',ha='center',fontsize=9.5,color=GRN,fontweight='bold')
+ax.text(9.2,4.05,'all orange (Gini 0) ✔',ha='center',fontsize=9.5,color=GRN,fontweight='bold')
 draw_basket(ax,9.2,2.3,[GRN,GRN,GRN],w=2.2,h=1.7)
-ax.text(9.2,1.15,'all apples (Gini 0) ✔',ha='center',fontsize=9.5,color=GRN,fontweight='bold')
+ax.text(9.2,1.15,'all green (Gini 0) ✔',ha='center',fontsize=9.5,color=GRN,fontweight='bold')
 ax.add_patch(FancyArrowPatch((6.9,4.3),(8.1,5.2),arrowstyle='-|>',mutation_scale=16,lw=1.8,color=GRN))
 ax.add_patch(FancyArrowPatch((6.9,3.7),(8.1,2.3),arrowstyle='-|>',mutation_scale=16,lw=1.8,color=GRN))
 ax.text(6,0.3,'A good question turns one messy basket into two clean ones. That drop in mess = "information gain".',ha='center',fontsize=9.5,color=MUT,style='italic')

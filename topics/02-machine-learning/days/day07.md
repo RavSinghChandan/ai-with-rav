@@ -62,26 +62,26 @@ print(export_text(model))
 @end
 @callout|yellow|`export_text` prints the actual if/else rules the tree learned. No other algorithm lets you read its brain this easily.
 
-@h2|How the tree scores a question — the fruit basket
-We said the tree picks the question that "separates groups best." But how does it *measure* that? With a simple score called **Gini**. Let's understand it with a basket of fruits.
-@image|images/23-gini.png|Gini is just a "mixed-up score" for a basket. All same fruit = 0 (clean). Half-and-half = 0.5 (fully mixed). A little mixed = a small number.
-Imagine a basket of fruits, and you want baskets that are **all one fruit**:
+@h2|How the tree scores a question — the basket of balls
+We said the tree picks the question that "separates groups best." But how does it *measure* that? With a simple score called **Gini**. Let's understand it with a basket of balls.
+@image|images/23-gini.png|Gini is just a "mixed-up score" for a basket. All same colour = 0 (clean). Half-and-half = 0.5 (fully mixed). A little mixed = a small number.
+Imagine a basket of balls, and you want baskets that are **all one colour**:
 @bullets
-Basket of **only mangoes** → not mixed at all → **Gini = 0** (perfect, clean).
-**Half mangoes, half apples** → totally mixed → **Gini = 0.5** (the worst).
-**Mostly mangoes, one apple** → only a little mixed → small Gini (like 0.28).
+Basket of **only orange balls** → not mixed at all → **Gini = 0** (perfect, clean).
+**Half orange, half green balls** → totally mixed → **Gini = 0.5** (the worst).
+**Mostly orange, one green ball** → only a little mixed → small Gini (like 0.28).
 @end
 @callout|green|So Gini is just a "how mixed is this basket?" score. **0 means clean, 0.5 means fully mixed.** The tree's whole job: ask the question that makes the baskets as *clean* (low Gini) as possible.
 
 @h2|The Gini formula — but really simple
-Here's the formula. Don't run away — it's easier than it looks, and it's the same fruit basket:
+Here's the formula. Don't run away — it's easier than it looks, and it's the same basket of balls:
 @image|images/24-gini-formula.png|The Gini formula worked out on our half-and-half basket: 1 − (½)² − (½)² = 0.5.
-@callout|yellow|**Gini = 1 − (chance of picking a mango)² − (chance of picking an apple)²**
+@callout|yellow|**Gini = 1 − (chance of picking an orange ball)² − (chance of picking a green ball)²**
 Let's just plug in our baskets:
 @bullets
-**All mangoes:** chance of mango = 1, apple = 0. So `1 − 1² − 0² = 0`. Clean! ✔
-**Half & half:** mango = ½, apple = ½. So `1 − (½)² − (½)² = 1 − 0.25 − 0.25 = 0.5`. Fully mixed.
-**The squaring** (the little ²) is the trick: it rewards baskets that lean heavily one way. One big fruit type → a big square → Gini drops toward 0.
+**All orange:** chance of orange = 1, green = 0. So `1 − 1² − 0² = 0`. Clean! ✔
+**Half & half:** orange = ½, green = ½. So `1 − (½)² − (½)² = 1 − 0.25 − 0.25 = 0.5`. Fully mixed.
+**The squaring** (the little ²) is the trick: it rewards baskets that lean heavily one way. One big colour → a big square → Gini drops toward 0.
 @end
 @callout|green|That's the whole formula. "1 minus the squared chances." A clean basket scores 0; a mixed one scores higher. The tree keeps choosing questions that lower this number — it's chasing clean baskets.
 
@@ -93,7 +93,7 @@ Before the split → one messy basket (high Gini).
 After a **good** question → two cleaner baskets (lower Gini) → the tree keeps it.
 The drop in messiness has a name: **information gain** — literally "how much cleaner did we get?"
 @end
-@callout|red|**One thing to watch (important):** if you let the tree keep asking questions forever, it makes a tiny basket for *every single fruit* — one fruit per basket. That's not learning, that's memorising. On a new fruit it gets confused. The fix is simple: tell it to stop early (`max_depth=5`) so it keeps sensible rules instead of memorising. (More on this in Video 15–16.)
+@callout|red|**One thing to watch (important):** if you let the tree keep asking questions forever, it makes a tiny basket for *every single ball* — one ball per basket. That's not learning, that's memorising. On a new ball it gets confused. The fix is simple: tell it to stop early (`max_depth=5`) so it keeps sensible rules instead of memorising. (More on this in Video 15–16.)
 
 @h2|Recap — the 20-second version
 @bullets

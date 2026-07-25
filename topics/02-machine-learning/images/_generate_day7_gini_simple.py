@@ -20,10 +20,10 @@ def basket(cx, cy, fruits, label, gini, gcolor):
     ax.text(cx,cy-2.4,f'Gini = {gini}',ha='center',fontsize=12,fontweight='bold',color=gcolor)
 
 # pure: 6 mangoes (orange)
-basket(2.2,3.5,[SAF]*6,'All mangoes\n(clean!)','0.0',GRN)
+basket(2.2,3.5,[SAF]*6,'All orange\n(clean!)','0.0',GRN)
 # half: 3 mango 3 apple
-basket(6.0,3.5,[SAF,SAF,SAF,GRN,GRN,GRN],'Half mango, half apple\n(fully mixed)','0.5',RED)
+basket(6.0,3.5,[SAF,SAF,SAF,GRN,GRN,GRN],'Half orange, half green\n(fully mixed)','0.5',RED)
 # mostly mango
-basket(9.8,3.5,[SAF,SAF,SAF,SAF,SAF,GRN],'Mostly mangoes\n(a little mixed)','0.28',YEL)
+basket(9.8,3.5,[SAF,SAF,SAF,SAF,SAF,GRN],'Mostly orange\n(a little mixed)','0.28',YEL)
 plt.tight_layout(); plt.savefig('topics/02-machine-learning/images/23-gini.png',dpi=150,facecolor=BG,bbox_inches='tight'); plt.close()
 print("simple gini basket image generated")
