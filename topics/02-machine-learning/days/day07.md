@@ -62,6 +62,17 @@ print(export_text(model))
 @end
 @callout|yellow|`export_text` prints the actual if/else rules the tree learned. No other algorithm lets you read its brain this easily.
 
+@h2|⚙️ Under the Hood — the real math (technical, skip if you like)
+Non-technical folks: you already have it — jump to the recap. Technical folks: here's exactly how the tree scores its questions.
+@image|images/23-gini.png|Gini impurity: 0 when a group is pure (all one class), 0.5 when it's a 50/50 mix. The tree picks splits that push Gini toward 0.
+@bullets
+**Gini impurity** → `Gini = 1 - Σ(p_i)²`. For a group that's 50/50 spam/not-spam: `1 - (0.5² + 0.5²) = 0.5` (worst). All one class: `1 - 1² = 0` (pure). Lower = cleaner.
+**Information gain** → for a candidate question, compute: `Gini(parent) - weighted Gini(children)`. The tree tries every feature and every threshold, and picks the split with the **highest information gain** (the biggest drop in messiness).
+**Entropy** → an alternative to Gini (`-Σ p_i · log2(p_i)`) — same idea, from information theory. Gini is faster; results are usually similar.
+**It's greedy** → the tree picks the best split *right now* at each node, never looking ahead. That's why it's fast, but also why it's not always globally optimal (and why a forest of them, Day 8, does better).
+@end
+@callout|red|**When it breaks (what an engineer must know):** (1) **Overfitting** — an unrestricted tree grows until every leaf is one sample = memorising. Control with `max_depth`, `min_samples_leaf`, or pruning. (2) **Instability** — change a few rows and the whole tree can restructure; single trees are high-variance (Random Forest fixes this). (3) **Biased to features with many levels** — a column like "user ID" can look like a perfect splitter but generalises to nothing.
+
 @h2|Recap — the 20-second version
 @bullets
 A Decision Tree plays **"20 Questions"** — yes/no questions down to a decision.

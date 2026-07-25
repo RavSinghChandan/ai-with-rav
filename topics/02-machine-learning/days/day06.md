@@ -72,6 +72,16 @@ print(model.predict_proba([[5, 8, 3]]))   # -> [[0.06, 0.94]]  94% spam
 @end
 @callout|yellow|`predict` gives the yes/no. `predict_proba` gives the probability behind it — that 0.94 is the sigmoid's output. Same 5-line pattern as Linear Regression, just a different answer type.
 
+@h2|⚙️ Under the Hood — how it actually learns (technical, skip if you like)
+Non-technical folks: you've got the whole idea already — jump to the recap. Technical folks: here's the real engine.
+@image|images/22-gradient-descent.png|Training = gradient descent. Start with random weights (high loss), then step downhill until the loss is lowest. That's how m and c are found.
+@bullets
+**The loss function** → Logistic Regression doesn't use MSE. It uses **log-loss** (cross-entropy): `-[y·log(p) + (1-y)·log(1-p)]`. It punishes confident-but-wrong predictions harshly (predict 0.99 when the truth is 0 → huge loss).
+**How it finds the weights** → **gradient descent** (the picture above): start with random `m, c`, compute the loss, nudge the weights in the direction that lowers it, repeat thousands of times until it settles at the minimum.
+**Why not a straight line's MSE?** → with the sigmoid, MSE gives a bumpy loss surface with local traps. Log-loss makes it a clean bowl, so gradient descent reliably reaches the bottom.
+@end
+@callout|red|**When it breaks (what an engineer must know):** (1) **Class imbalance** — 99% not-spam, 1% spam → the model can score 99% "accuracy" by always saying "not spam" and be useless. Use precision/recall, not accuracy (Video 17). (2) **Non-linear boundaries** — logistic draws a straight decision line; if your classes curve around each other, it fails — you need features engineered or a tree/NN. (3) **Correlated features** (multicollinearity) make the learned weights unstable and hard to trust.
+
 @h2|Recap — the 20-second version
 @bullets
 Logistic Regression answers **yes/no** questions (spam, fraud, churn).

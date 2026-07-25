@@ -6,6 +6,17 @@ Each video = a `.md` file (renders on GitHub) **and** a `.pdf` (Rav teaches from
 
 ---
 
+## 🎯 DEPTH RULE (added 2026-07-25, NON-NEGOTIABLE) — REAL mastery, not superficial
+Rav's demand: "I'm not going for superficial knowledge. It is real technical, making them actually learn ML." Every algorithm/concept video MUST have BOTH layers:
+1. **Intuition layer** (story + analogy + diagrams) — for everyone, non-technical friendly. (Already good in Days 1-7.)
+2. **"⚙️ Under the Hood" layer** (deeper, marked "for the technical / skip if you like") — this is what makes it REAL:
+   - **The actual math + how the machine LEARNS it** — not just the formula, but the ENGINE (e.g. Linear Reg: the cost function MSE + gradient descent actually finding m,c by rolling downhill). Show the loss surface, the update step.
+   - **"When it breaks / what to watch for"** — the real failure modes an engineer must know (e.g. outliers wreck linear regression, multicollinearity, non-linear data, class imbalance for logistic, overfitting for trees). Superficial courses skip this; we don't.
+   - **Real hands-on** — code that builds genuine intuition (plot the loss going down, show a residual plot, break it on purpose), not just `.fit()`.
+BAR: a technical person should finish able to actually USE and DEBUG the algorithm (interview-ready), while a non-technical person still followed the intuition. If a video only has intuition, it's NOT done — add the Under-the-Hood layer. Days 1-7 need retro-upgrading with this layer.
+
+---
+
 ## 🖼 IMAGE RULE (added 2026-07-22, non-negotiable) — ONE IMAGE PER MAJOR SECTION
 **Every major @h2 teaching section that explains a CONCEPT must have its own diagram.** Do NOT ship a PDF with only 2 images. Rav's words: "as many topics there are, that many images there should be." Target: a visual for EACH concept section (typically 4–6 images per video, not 2).
 - Section explains an idea → it needs a diagram that shows that idea (not just text).
