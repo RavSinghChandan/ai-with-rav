@@ -54,11 +54,13 @@ def codeblock(lines):
 
 DAY=1; VIDEO=1; TITLE=''; SUBTITLE=''; TOPIC='MACHINE LEARNING'; LEARN=[]; BASEDIR='.'
 
-def _brand_watermark(cnv):
-    # faint centered logo watermark on every page
+def _brand_watermark(cnv, cy=None, ww=110*mm):
+    # faint logo watermark. Content pages: centered. Cover: pass a lower cy so it
+    # sits in the empty lower area, NOT behind the title / what-you'll-learn box.
     if os.path.exists(WMARK):
-        wr=PImage.open(WMARK); rat=wr.height/wr.width; ww=110*mm; wh=ww*rat
-        cnv.drawImage(WMARK, W/2-ww/2, H/2-wh/2, ww, wh, mask='auto', preserveAspectRatio=True)
+        wr=PImage.open(WMARK); rat=wr.height/wr.width; wh=ww*rat
+        y = (H/2-wh/2) if cy is None else (cy-wh/2)
+        cnv.drawImage(WMARK, W/2-ww/2, y, ww, wh, mask='auto', preserveAspectRatio=True)
 
 def _corner_photo(cnv):
     # small circular photo tucked into the FOOTER band (below the content frame,
@@ -81,18 +83,24 @@ def page_bg(cnv,doc,footer=True):
 
 def draw_cover(cnv,doc):
     cnv.setFillColor(BG); cnv.rect(0,0,W,H,fill=1,stroke=0)
-    _brand_watermark(cnv)
+    _brand_watermark(cnv, cy=H*0.28, ww=130*mm)   # lower + bigger on cover, in the empty area below the text
     cx=W/2
-    # --- top brand strip: small logo card + name (left) , small photo (right) ---
+    # --- top brand strip: logo card (left, its own space) | name text | photo (right) ---
+    card_w=28*mm                       # fixed card width so text placement is predictable
+    card_x=18*mm; card_top=H-18*mm
     if os.path.exists(LOGO):
-        lr=PImage.open(LOGO); rat=lr.height/lr.width; lw=20*mm; lh=lw*rat
-        cnv.setFillColor(HexColor('#ffffff')); cnv.roundRect(18*mm, H-20*mm-lh-4*mm, lw+6*mm, lh+8*mm, 4*mm, fill=1, stroke=0)
-        cnv.drawImage(LOGO, 21*mm, H-20*mm-lh, lw, lh, mask='auto', preserveAspectRatio=True)
-    cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold',15); cnv.drawString(48*mm, H-28*mm, 'AI with Rav')
-    cnv.setFillColor(GOLD); cnv.setFont('Helvetica',9.5); cnv.drawString(48*mm, H-33*mm, 'Learn AI the way you actually think.')
+        lr=PImage.open(LOGO); rat=lr.height/lr.width
+        lw=18*mm; lh=lw*rat
+        card_h=lh+7*mm
+        cnv.setFillColor(HexColor('#ffffff')); cnv.roundRect(card_x, card_top-card_h, card_w, card_h, 4*mm, fill=1, stroke=0)
+        cnv.drawImage(LOGO, card_x+(card_w-lw)/2, card_top-card_h+3.5*mm, lw, lh, mask='auto', preserveAspectRatio=True)
+    # name text starts WELL clear of the card (card ends at 18+28=46mm; text at 52mm), vertically centred on the card
+    text_x=card_x+card_w+8*mm          # = 54mm, clear gap from the logo card
+    cnv.setFillColor(FG); cnv.setFont('Helvetica-Bold',16); cnv.drawString(text_x, H-27*mm, 'AI with Rav')
+    cnv.setFillColor(GOLD); cnv.setFont('Helvetica',9.5); cnv.drawString(text_x, H-33*mm, 'Learn AI the way you actually think.')
     if os.path.exists(CIRCLE):
-        d=22*mm; cnv.drawImage(CIRCLE, W-18*mm-d, H-20*mm-d, d, d, mask='auto')
-        cnv.setStrokeColor(SAF); cnv.setLineWidth(1.6); cnv.circle(W-18*mm-d/2, H-20*mm-d/2, d/2, stroke=1, fill=0)
+        d=22*mm; cnv.drawImage(CIRCLE, W-18*mm-d, H-19*mm-d, d, d, mask='auto')
+        cnv.setStrokeColor(SAF); cnv.setLineWidth(1.6); cnv.circle(W-18*mm-d/2, H-19*mm-d/2, d/2, stroke=1, fill=0)
     # --- DAY badge ---
     by=H-58*mm
     cnv.setFillColor(GOLD); cnv.roundRect(18*mm, by, 52*mm, 12*mm, 6*mm, fill=1, stroke=0)

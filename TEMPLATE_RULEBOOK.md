@@ -33,6 +33,9 @@ Each video = a `.md` file (renders on GitHub) **and** a `.pdf` (Rav teaches from
 - **Small circular photo** in the FOOTER BAND bottom-right (11mm, gold ring), aligned with footer text, at y≈7.5mm.
 - Footer: "AI with Rav · <Topic> in 30 Days · Day N" (NO links in footer body).
 
+### ⚠️ COVER LOGO SEPARATION RULE (added 2026-07-25 — never repeat)
+On the COVER page 1: the logo must sit in its own white card with a CLEAR gap before the "AI with Rav" text (logo card fixed 28mm wide at x=18mm; text starts at x=54mm). And the faint logo WATERMARK must NOT sit behind the title / what-you'll-learn box — on the cover it's moved LOWER (cy=H*0.28, into the empty bottom area). Bug that triggered this: logo card and text were only 4mm apart + watermark ghosted behind the title. Always view the cover after any template change.
+
 ### ⚠️ CORNER-PHOTO / FOOTER NO-OVERLAP RULE (added 2026-07-23 — never repeat)
 The corner photo and footer must sit BELOW the content frame — **body text must NEVER overlap the photo.** (Day 5 bug: photo was 15mm tall at y=15mm reaching up to 30mm, but the text frame bottom was 16mm → the last-page text overlapped the photo.) FIX that is now locked in the template: content `Frame` bottom = **22mm** (`Frame(16mm,22mm,W-32mm,H-40mm)`), photo tucked at y≈7.5mm size 11mm (fully inside the footer margin). ALWAYS view the LAST content page (where text runs longest) to confirm no overlap before pushing.
 
