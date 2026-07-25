@@ -6,6 +6,18 @@ Each video = a `.md` file (renders on GitHub) **and** a `.pdf` (Rav teaches from
 
 ---
 
+## ✍️ CONTENT / LANGUAGE RULE (added 2026-07-25, NON-NEGOTIABLE) — the way it must be WRITTEN
+Rav's exact feedback (Day 7 "Under the Hood" was too heavy/abstract): fix HOW content is written. Follow ALL of these:
+1. **6th-grade English.** A 6th-grade student must understand every sentence. Short words, short sentences. If a sentence needs re-reading, rewrite it.
+2. **ONE simple, universal, Indian-context story per concept — and STICK to it.** Pick a creative, curiosity-sparking everyday example (a class of students, a fruit basket, a cricket team, sorting rice/dal, a school bag) and explain the WHOLE concept — even the formula — through that ONE story. Do NOT jump between random examples.
+3. **Everything interconnected — nothing alien.** Every new term must connect back to the story or to something already taught. No concept drops in from nowhere. Thread it: story → idea → formula, all the same thread.
+4. **Explain the formula SIMPLY — but DO include it.** There must be a formula (Rav wants real, not superficial), but explain what each part MEANS in plain words through the story. Don't derive, don't pile on jargon. Just: "this symbol means X, and here's why in our example."
+5. **Explain the graph/diagram simply too** — tie it to the same story, say what the axes/curve mean in one plain line. Never assume they read math.
+6. **NOT too much depth.** Enough to genuinely understand and use it — NOT a university lecture. If it's getting heavy for Rav himself, it's too heavy. Cut it.
+7. **Spark curiosity** — the example should make people go "oh, that's clever!" Creative > generic. (e.g. don't say "50/50 spam"; use a relatable mixed-up basket.)
+8. Keep the premium UI/images quality high — only the WRITING changes, not the design.
+BAR: a 6th grader follows the story AND ends up understanding the real formula, because it was all explained through one simple, connected, Indian example. If any section reads like a textbook, REWRITE it as a story.
+
 ## 🎯 DEPTH RULE (added 2026-07-25, NON-NEGOTIABLE) — REAL mastery, not superficial
 Rav's demand: "I'm not going for superficial knowledge. It is real technical, making them actually learn ML." Every algorithm/concept video MUST have BOTH layers:
 1. **Intuition layer** (story + analogy + diagrams) — for everyone, non-technical friendly. (Already good in Days 1-7.)

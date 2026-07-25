@@ -62,16 +62,36 @@ print(export_text(model))
 @end
 @callout|yellow|`export_text` prints the actual if/else rules the tree learned. No other algorithm lets you read its brain this easily.
 
-@h2|⚙️ Under the Hood — the real math (technical, skip if you like)
-Non-technical folks: you already have it — jump to the recap. Technical folks: here's exactly how the tree scores its questions.
-@image|images/23-gini.png|Gini impurity: 0 when a group is pure (all one class), 0.5 when it's a 50/50 mix. The tree picks splits that push Gini toward 0.
+@h2|How the tree scores a question — the fruit basket
+We said the tree picks the question that "separates groups best." But how does it *measure* that? With a simple score called **Gini**. Let's understand it with a basket of fruits.
+@image|images/23-gini.png|Gini is just a "mixed-up score" for a basket. All same fruit = 0 (clean). Half-and-half = 0.5 (fully mixed). A little mixed = a small number.
+Imagine a basket of fruits, and you want baskets that are **all one fruit**:
 @bullets
-**Gini impurity** → `Gini = 1 - Σ(p_i)²`. For a group that's 50/50 spam/not-spam: `1 - (0.5² + 0.5²) = 0.5` (worst). All one class: `1 - 1² = 0` (pure). Lower = cleaner.
-**Information gain** → for a candidate question, compute: `Gini(parent) - weighted Gini(children)`. The tree tries every feature and every threshold, and picks the split with the **highest information gain** (the biggest drop in messiness).
-**Entropy** → an alternative to Gini (`-Σ p_i · log2(p_i)`) — same idea, from information theory. Gini is faster; results are usually similar.
-**It's greedy** → the tree picks the best split *right now* at each node, never looking ahead. That's why it's fast, but also why it's not always globally optimal (and why a forest of them, Day 8, does better).
+Basket of **only mangoes** → not mixed at all → **Gini = 0** (perfect, clean).
+**Half mangoes, half apples** → totally mixed → **Gini = 0.5** (the worst).
+**Mostly mangoes, one apple** → only a little mixed → small Gini (like 0.28).
 @end
-@callout|red|**When it breaks (what an engineer must know):** (1) **Overfitting** — an unrestricted tree grows until every leaf is one sample = memorising. Control with `max_depth`, `min_samples_leaf`, or pruning. (2) **Instability** — change a few rows and the whole tree can restructure; single trees are high-variance (Random Forest fixes this). (3) **Biased to features with many levels** — a column like "user ID" can look like a perfect splitter but generalises to nothing.
+@callout|green|So Gini is just a "how mixed is this basket?" score. **0 means clean, 0.5 means fully mixed.** The tree's whole job: ask the question that makes the baskets as *clean* (low Gini) as possible.
+
+@h2|The Gini formula — but really simple
+Here's the formula. Don't run away — it's easier than it looks, and it's the same fruit basket:
+@callout|yellow|**Gini = 1 − (chance of picking a mango)² − (chance of picking an apple)²**
+Let's just plug in our baskets:
+@bullets
+**All mangoes:** chance of mango = 1, apple = 0. So `1 − 1² − 0² = 0`. Clean! ✔
+**Half & half:** mango = ½, apple = ½. So `1 − (½)² − (½)² = 1 − 0.25 − 0.25 = 0.5`. Fully mixed.
+**The squaring** (the little ²) is the trick: it rewards baskets that lean heavily one way. One big fruit type → a big square → Gini drops toward 0.
+@end
+@callout|green|That's the whole formula. "1 minus the squared chances." A clean basket scores 0; a mixed one scores higher. The tree keeps choosing questions that lower this number — it's chasing clean baskets.
+
+@h2|So how does it choose? (still the basket)
+At every step the tree tries every question and asks: *"After this split, are my two baskets cleaner than before?"* It picks the question that drops the Gini the most.
+@bullets
+Before the split → one messy basket (high Gini).
+After a **good** question → two cleaner baskets (lower Gini) → the tree keeps it.
+The drop in messiness has a name: **information gain** — literally "how much cleaner did we get?"
+@end
+@callout|red|**One thing to watch (important):** if you let the tree keep asking questions forever, it makes a tiny basket for *every single fruit* — one fruit per basket. That's not learning, that's memorising. On a new fruit it gets confused. The fix is simple: tell it to stop early (`max_depth=5`) so it keeps sensible rules instead of memorising. (More on this in Video 15–16.)
 
 @h2|Recap — the 20-second version
 @bullets
