@@ -50,7 +50,27 @@ On the flat page, a straight line **fails** (left picture).
 So SVM **lifts the data into a higher view** — here, each point's "height" = its distance from the centre.
 Now the inside orange points sit **low** and the outer green ring sits **high** — and a single **flat line** separates them perfectly (right picture).
 @end
-@callout|yellow|This lifting move is called the **kernel trick.** It's the SVM superpower: when groups can't be split by a straight line, add a clever new "dimension" so that in that higher view, a straight line works again. The common kernel is called **RBF** — just remember it as "the setting that lets SVM handle curved, tangled data."
+@callout|yellow|This lifting move is called the **kernel trick.** It's the SVM superpower: when groups can't be split by a straight line, add a clever new "dimension" so that in that higher view, a straight line works again.
+
+@h2|The types of kernels (the "lifting" styles)
+A **kernel** is just the *style* of lifting SVM uses. You pick one based on how tangled your data is. You don't need the maths — just know what each is for:
+@table
+Kernel | In plain words | Use it when
+Linear | No lifting — a plain straight line | The two groups are already split by a straight line (simplest, fastest)
+RBF (Gaussian) | Lifts using "distance from each point" — bends around blobs | Data is curved or tangled (the go-to default; handles most cases)
+Polynomial | Lifts using curves (x², x³…) | The boundary is a smooth curve, not too wild
+Sigmoid | Lifts with an S-shape (like a mini neural net) | Rare; special problems only
+@end
+@callout|green|Simple rule: **start with `linear`** if the groups look straight-line separable (it's fastest and easiest to trust). If that's too weak and the data is curved, switch to **`RBF`** — it's the workhorse that handles almost everything. Polynomial and Sigmoid are for special cases. That's all four, so you can teach the full menu.
+
+@h2|Picking C — the strictness dial
+Besides the kernel, SVM has one more important knob: **C.** Think of C as *"how much do I punish mistakes?"*
+@image|images/38-picking-c.png|Small C = a wide, forgiving margin that ignores one odd troublemaker (safer on new data). Large C = a thin, strict margin that bends to catch every point (can overfit noise).
+@bullets
+**Small C** → "relax, a few mistakes are okay." SVM keeps a **wide** margin and **ignores** the odd troublemaker point. Safer on new data.
+**Large C** → "get EVERY point right." SVM **bends** and makes a **thin** margin to catch even one stray point. Risky — it can memorise noise (overfit).
+@end
+@callout|yellow|C is a balance dial: too small = the line gets sloppy and underfits; too large = it obsesses over every point and overfits. The trick is to **try a few values of C** (like 0.1, 1, 10) and keep the one that predicts *new* data best. Same idea as `max_depth` for trees — a dial that trades "fit the training data" against "stay simple enough to generalise."
 
 @h2|Try it — a few lines
 @code
@@ -79,7 +99,7 @@ print(model.support_vectors_)      # the few edge points that hold the line
 SVM draws the **one dividing line with the widest safe gap** (margin) on both sides.
 Only a few edge points — the **support vectors** — decide where the line goes.
 Wider margin = **safer, more confident** model.
-The **kernel trick** lifts curved data so a straight line can split it.
-**Scale features + tune C** — then SVM is razor-sharp on clean, medium data.
+The **kernel trick** lifts curved data so a straight line can split it (linear, RBF, poly, sigmoid).
+**C** is the strictness dial — small = wide/forgiving, large = thin/strict. **Scale features + tune C** and SVM is razor-sharp.
 @end
 @callout|teal|Next up — Video 12: Naive Bayes. The lightning-fast algorithm behind spam filters that uses simple probability — and one "naive" assumption that makes it shockingly quick. See you Day 12.
