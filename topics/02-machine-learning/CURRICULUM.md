@@ -47,10 +47,10 @@
 |---|---|---|---|
 | 21 | Recommendation Systems | Collaborative + content filtering | "How Netflix reads your mind" |
 | 22 | Time-Series Forecasting | Predicting future from past, trend/seasonality | A shopkeeper predicting tomorrow's sales |
-| 23 | Anomaly Detection | Finding the odd one out | The security guard spotting the odd bag |
+| 23 | Anomaly Detection | Finding the odd one out — Isolation Forest, DBSCAN density clustering (the K-Means alternative), z-score | The security guard spotting the odd bag |
 | 24 | NLP with Classic ML | TF-IDF, bag-of-words, text → numbers | Teaching a machine to read reviews |
-| 25 | Imbalanced Data | When 99% is one class — SMOTE, class weights | 10 sick people in 1000 (fair scales) |
-| 26 | Missing & Messy Data | Imputation, outliers, dirty data | Cleaning vegetables before cooking |
+| 25 | Imbalanced Data | The FIX for Day 17's rare-class trap — resampling, SMOTE, class weights (do NOT re-explain the trap; teach the CURES) | Making the scales fair for the rare 10 |
+| 26 | Missing & Messy Data | Missing values (imputation), outliers, duplicates, wrong types (NOT encoding/scaling — those were Day 19; this is about DIRTY/incomplete data) | Cleaning spoiled/half-missing vegetables |
 | 27 | Explainable AI (SHAP) | Why did the model decide that? | The judge who explains the verdict |
 | 28 | Association Rules | Market-basket, "bought X also bought Y" | The kirana shop shelf arrangement |
 | 29 | Full Kaggle Case Study | End-to-end applying everything | Watch-me-solve one real dataset |
