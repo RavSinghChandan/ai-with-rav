@@ -77,4 +77,6 @@ You do NOT need to quit your job. This is a **while-you-work** plan — steady, 
 **Depth over collecting courses.** Finish one thing fully before jumping to the next shiny topic.
 **Use AI to learn AI.** Let ChatGPT explain, debug, and quiz you — you're training for the future using the future.
 @end
-@callout|teal|That's the whole roadmap. You're a developer — you already have the hardest part. The path is: Python → ML → Deep Learning → GenAI → Ship it, one floor at a time, in 4-5 months, while working. Follow this channel and I'll walk you through every stage, one simple video at a time — until you're an AI Engineer. Let's build. See you in the next one.
+@callout|teal|That's the whole roadmap. You're a developer — you already have the hardest part. The path is: Python → ML → Deep Learning → GenAI → Ship it, one floor at a time, in 4-5 months, while working. Follow this channel and I'll walk you through every stage, one simple video at a time — until you're an AI Engineer.
+
+Next up — Video 2: "Do you REALLY need maths for AI?" The question that scares away the most people — and the honest answer that will set you free. See you next.
