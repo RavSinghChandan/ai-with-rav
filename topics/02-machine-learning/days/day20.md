@@ -87,4 +87,4 @@ An **ensemble** = many models combined — a panel of judges beats one judge.
 **Stacking** = a head judge that learns how much to trust each specialist.
 It works because **diverse** models make **different** mistakes that cancel out.
 @end
-@callout|teal|Next up — Video 21: Intro to Neural Networks — how machines learn like a brain. We've mastered classic ML. Next we step into deep learning: what a "neuron" really is, why stacking them into layers is so powerful, and how this one idea powers everything from ChatGPT to self-driving cars. See you Day 21.
+@callout|teal|Next up — Video 21: Recommendation Systems. You've mastered the algorithms — now we start applying them. First up: how Netflix, Amazon, and Spotify seem to read your mind and know exactly what you'll like next. See you Day 21.
