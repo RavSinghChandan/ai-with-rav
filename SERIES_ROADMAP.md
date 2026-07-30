@@ -1,12 +1,14 @@
 # 🗺️ AI with Rav — The Full Series Roadmap (STATIC — never deviate)
 
-> The master learning journey: **12 modules, each a full 30-day playlist.**
+> The master learning journey: **13 core modules, each a full 30-day playlist.**
 > Each module has its own `topics/<folder>/CURRICULUM.md` with the locked day-by-day plan.
 > **ALWAYS read the relevant CURRICULUM.md before generating any day. Do NOT jump ahead or merge modules.**
+> Plus GUIDANCE playlists (AI Careers `20-ai-careers`) that run alongside — see their own CURRICULUM.
 
-## The order (each = 30 days)
+## The core technical order (each = 30 days)
 | # | Module | Folder | Status |
 |---|---|---|---|
+| 0 | **Python for AI Engineers** (the foundation) | `27-python` | curriculum locked |
 | 1 | **Machine Learning** | `02-machine-learning` | Days 1-20 done, 21-30 to do |
 | 2 | **Neural Networks** (foundations) | `13-neural-networks` | curriculum locked |
 | 3 | **Deep Learning** (deep concepts + generative) | `03-deep-learning` | curriculum locked |
@@ -20,8 +22,14 @@
 | 11 | **MLOps** (ship & maintain) | `09-mlops` | curriculum locked |
 | 12 | **AI Evaluation** (is it good & safe?) | `10-ai-evaluation` | curriculum locked |
 
+## Guidance playlists (run alongside, not in the technical chain)
+| Module | Folder | Status |
+|---|---|---|
+| **AI Careers** (Developer → AI Engineer, getting hired) | `20-ai-careers` | curriculum locked, Day 1 done |
+
 ## Why this order (the teaching logic)
-- **Classic ML first** (module 1) — the foundations before anything neural.
+- **Python first** (module 0) — the foundation; you can't do any AI without it. Taught scratch-first so it's 6-7-year timeless, ending with numpy/pandas so viewers can start ML immediately.
+- **Classic ML** (module 1) — the foundations before anything neural.
 - **Neural Networks → Deep Learning** (2-3) — one neuron, then why depth wins + generative.
 - **CNN then RNN** (4-5) — vision, then sequences. RNN deliberately *ends* by discovering attention…
 - **…which hands off to Transformers** (6) — the architecture that replaced recurrence.
