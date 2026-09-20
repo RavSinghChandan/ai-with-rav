@@ -26,6 +26,7 @@
 | Playlist | Folder | Status |
 |---|---|---|
 | **Hackathon Shorts** | `28-hackathons` | 7 videos ready |
+| **AI Shorts** (one idea, across playlists) | `29-shorts` | 6 videos ready |
 
 ## Guidance playlists (run alongside, not in the technical chain)
 | Module | Folder | Status |
