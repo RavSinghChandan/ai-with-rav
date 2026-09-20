@@ -36,7 +36,9 @@ H2=st('H2',fontName='Helvetica-Bold',fontSize=15,leading=19,textColor=GOLD,space
 BODY=st('BODY'); BULL=st('BULL',leftIndent=14,bulletIndent=2)
 NOTE=st('NOTE'); CODE=st('CODE',fontName='Courier',fontSize=9.5,leading=13); CAP=st('CAP',fontSize=9.5,leading=13,textColor=MUT,alignment=1)
 
-def md(t):  # inline **bold**->yellow, *italic*
+def md(t):  # inline `code`, **bold**->yellow, *italic*
+    # `code` first: otherwise ** inside a code span would be eaten as bold.
+    t=re.sub(r'`([^`]+?)`',r'<font face="Courier" color="#4EC5E8">\1</font>',t)
     t=re.sub(r'\*\*(.+?)\*\*',r'<b><font color="#FFD166">\1</font></b>',t)
     t=re.sub(r'\*(.+?)\*',r'<i>\1</i>',t); return t
 
@@ -53,6 +55,9 @@ def codeblock(lines):
         ('TOPPADDING',(0,0),(-1,-1),10),('BOTTOMPADDING',(0,0),(-1,-1),10)])); return t
 
 DAY=1; VIDEO=1; TITLE=''; SUBTITLE=''; TOPIC='MACHINE LEARNING'; LEARN=[]; BASEDIR='.'
+# Footer wording. 30-day modules keep the default; short-form playlists set
+# `series:` in front-matter (e.g. 'Shorts') so the footer does not lie.
+SERIES_LABEL='MACHINE LEARNING in 30 Days'
 
 def _brand_watermark(cnv, cy=None, ww=110*mm):
     # faint logo watermark. Content pages: centered. Cover: pass a lower cy so it
@@ -77,7 +82,7 @@ def page_bg(cnv,doc,footer=True):
     if not footer: return
     _corner_photo(cnv)
     cnv.setFillColor(MUT); cnv.setFont('Helvetica',8)
-    cnv.drawString(16*mm,10*mm,f'AI with Rav  ·  {TOPIC.title()} in 30 Days')
+    cnv.drawString(16*mm,10*mm,f'AI with Rav  ·  {SERIES_LABEL}')
     cnv.drawRightString(W-16*mm-18*mm,10*mm,f'Day {DAY}')
     cnv.setStrokeColor(LINE); cnv.setLineWidth(0.5); cnv.line(16*mm,13*mm,W-34*mm,13*mm)
 
@@ -200,7 +205,7 @@ def build_flowables(body):
     return S
 
 def main():
-    global DAY,VIDEO,TITLE,SUBTITLE,TOPIC,BASEDIR,LEARN
+    global DAY,VIDEO,TITLE,SUBTITLE,TOPIC,BASEDIR,LEARN,SERIES_LABEL
     src=sys.argv[1] if len(sys.argv)>1 else 'days/day01.md'
     # BASEDIR = the topic folder (content file is in <topic>/days/, images in <topic>/images/)
     BASEDIR=os.path.dirname(os.path.dirname(os.path.abspath(src)))  # up from days/ to topic root
@@ -208,6 +213,7 @@ def main():
     DAY=int(meta.get('day',1)); VIDEO=int(meta.get('video',DAY))
     TITLE=meta.get('title',''); SUBTITLE=meta.get('subtitle',TITLE)
     TOPIC=meta.get('topic','MACHINE LEARNING')
+    SERIES_LABEL=meta.get('series', f'{TOPIC.title()} in 30 Days')
     # "learn" front-matter: pipe-separated bullets for the cover "What you'll learn" box
     LEARN=[x.strip() for x in meta.get('learn','').split('|') if x.strip()]
     circle_crop(PHOTO,CIRCLE)

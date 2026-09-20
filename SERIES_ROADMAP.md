@@ -22,6 +22,11 @@
 | 11 | **MLOps** (ship & maintain) | `09-mlops` | curriculum locked |
 | 12 | **AI Evaluation** (is it good & safe?) | `10-ai-evaluation` | curriculum locked |
 
+## Short-form playlists (under 2 minutes each)
+| Playlist | Folder | Status |
+|---|---|---|
+| **Hackathon Shorts** | `28-hackathons` | 7 videos ready |
+
 ## Guidance playlists (run alongside, not in the technical chain)
 | Module | Folder | Status |
 |---|---|---|
