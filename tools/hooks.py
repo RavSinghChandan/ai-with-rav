@@ -179,7 +179,7 @@ HOOKS = {
 
  "20-ai-careers": (
    "Why 'I know Python' gets rejected",
-   "Every AI job wants Python. **Nobody hires for it.**",
+   "Python is table stakes. **Nobody hires for it.**",
    ["**Tools** — Python, an API call, a notebook. Everyone applying has this.",
     "**Judgement** — which model, and why. This is where the interview happens.",
     "**Evidence** — something running that another person actually used."],
