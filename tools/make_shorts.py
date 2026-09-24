@@ -7,7 +7,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from short_style import *          # noqa: F403
+from viral_style import *          # noqa: F403
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -305,7 +305,7 @@ def draw(key, ax, a):
             if i < 2:
                 arrow(a, 3.0, y - 0.05, 3.0, y - 0.3, MUTED, lw=1.8)
         a.text(3.0, 0.55, "always the same path", ha="center", color=MUTED, fontsize=11.5)
-        a.add_patch(plt.Circle((9.0, 3.6), 0.6, ec=GOLD, fc=PAPER, lw=2.4))
+        a.add_patch(plt.Circle((9.0, 3.6), 0.6, ec=GOLD, fc=PANEL, lw=2.4))
         a.text(9.0, 3.6, "model", ha="center", va="center", color=GOLD,
                fontsize=12, fontweight="bold")
         for dx, lbl in [(-1.85, "Tool A"), (0, "Tool B"), (1.85, "Tool C")]:
@@ -360,7 +360,7 @@ def draw(key, ax, a):
                 i = r * cols_ + c_
                 x = 1.0 + c_ * 0.40; y = 4.3 - r * 0.42
                 a.add_patch(plt.Circle((x, y), 0.145,
-                                       color=RED if i >= 99 else "#D7E6F2"))
+                                       color=RED if i >= 99 else "#2A3854"))
         a.text(6, 5.4, 'THE MODEL THAT ALWAYS SAYS "NOT FRAUD"',
                ha="center", color=NAVY, fontsize=14, fontweight="bold")
         card(a, 1.4, 0.7, 4.0, 1.2, GOLD, lw=2.2)

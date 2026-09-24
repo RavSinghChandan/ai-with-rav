@@ -1,21 +1,24 @@
 """
 SHORTS TEMPLATE — AI With Rav.
 
-A two-page PDF built for a sub-3-minute reel, not a 12-minute lesson:
+Two landscape pages built for a sub-3-minute reel:
 
-    page 1  ONE diagram, full bleed, nothing else competing with it
-    page 2  the words — hook, three beats, one takeaway
+    page 1   THE HOOK, huge, plus the diagram under it
+    page 2   the three beats and the takeaway
 
-Why light, not the dark premium deck: a reel is judged in the first second on a
-phone. Dark frames lose contrast on a small bright screen, and "premium" is not
-what a viewer is deciding — they are deciding whether this is instantly clear.
+WHAT CHANGED AND WHY
+--------------------
+The first version put a chapter-style title on page 1 at 22pt on white. Two
+things were wrong with that against how short-form actually performs:
 
-Brand colours are sampled from the logo itself (brand/rav-mark.png):
-    cyan   #00B8FC   the < > brackets
-    gold   #F6BB63   the halo
-    navy   #2F4C79   the wordmark
+1. Short-form guidance is a hook of six to eight words, centred, bold and high
+   contrast, resolved within three seconds. A descriptive title like "Why a dot
+   product is just agreement" is a heading, not a hook.
+2. 80%+ of phone users run dark mode, and saturated accents pop against
+   near-black. A white page in a dark feed reads as a document.
 
-The 30-day factory (build_master_pdf.py) is untouched. Both live side by side.
+So the ground is now near-black, the hook is 40pt+ and sits alone at the top of
+page 1, and the brand cyan carries the emphasis.
 
     python3.12 build_short_pdf.py topics/<topic>/shorts/sNN.md
 """
@@ -30,37 +33,38 @@ from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas as pdfcanvas
 from reportlab.platypus import Paragraph
 
-# ── brand ──────────────────────────────────────────────────────────────────
+# Palette — kept in step with tools/viral_style.py
+BG = "#0B1220"
+PANEL = "#141E33"
+LINE = "#24314D"
 CYAN = "#00B8FC"
 GOLD = "#F6BB63"
-NAVY = "#14213D"
-INK = "#1B2A41"
-MUTED = "#5B6B82"
-PAPER = "#FFFFFF"
-TINT = "#F2F8FD"          # very light cyan wash
-LINE = "#DCE7F1"
+GREEN = "#2BD9A8"
+CREAM = "#EAF2FB"
+MUTED = "#8FA3BF"
 
 W, H = landscape(A4)
 HERE = os.path.dirname(os.path.abspath(__file__))
 MARK = os.path.join(HERE, "brand", "rav-mark.png")
-LOCKUP = os.path.join(HERE, "brand", "rav-lockup.png")
+LOCKUP = os.path.join(HERE, "brand", "rav-lockup-dark.png")
+if not os.path.exists(LOCKUP):
+    LOCKUP = os.path.join(HERE, "brand", "rav-lockup.png")
 
 
 def st(name, **kw):
-    base = dict(fontName="Helvetica", fontSize=11, leading=15, textColor=INK)
+    base = dict(fontName="Helvetica", fontSize=13, leading=18, textColor=CREAM)
     base.update(kw)
     return ParagraphStyle(name, **base)
 
 
 def md(text):
-    """**bold** -> cyan bold, *italic* -> italic."""
+    """**bold** -> cyan bold. The emphasis colour is the brand colour."""
     text = re.sub(r"\*\*(.+?)\*\*", rf'<b><font color="{CYAN}">\1</font></b>', text)
     text = re.sub(r"(?<!\*)\*([^*]+?)\*(?!\*)", r"<i>\1</i>", text)
     return text
 
 
 def parse(path):
-    """Front matter + body, same simple format as the 30-day files."""
     raw = open(path, encoding="utf-8").read()
     meta, body = {}, raw
     if raw.startswith("---"):
@@ -72,139 +76,101 @@ def parse(path):
     return meta, body.strip()
 
 
-def draw_header(c, topic, number):
-    """Thin brand strip: lockup left, topic right."""
-    c.setFillColor(TINT)
-    c.rect(0, H - 22 * mm, W, 22 * mm, stroke=0, fill=1)
-    c.setStrokeColor(CYAN)
-    c.setLineWidth(1.6)
-    c.line(0, H - 22 * mm, W, H - 22 * mm)
-
-    if os.path.exists(LOCKUP):
-        img = ImageReader(LOCKUP)
-        iw, ih = img.getSize()
-        h = 11 * mm
-        c.drawImage(img, 14 * mm, H - 17.5 * mm, width=h * iw / ih, height=h,
-                    mask="auto")
-
-    c.setFillColor(MUTED)
-    c.setFont("Helvetica-Bold", 9)
-    c.drawRightString(W - 14 * mm, H - 12.5 * mm, topic.upper())
-    c.setFillColor(CYAN)
-    c.setFont("Helvetica-Bold", 9)
-    c.drawRightString(W - 14 * mm, H - 17.5 * mm, f"SHORT #{number}")
-
-
-def draw_footer(c, page, total=2):
-    c.setStrokeColor(LINE)
-    c.setLineWidth(0.8)
-    c.line(14 * mm, 14 * mm, W - 14 * mm, 14 * mm)
-    c.setFillColor(MUTED)
-    c.setFont("Helvetica", 8)
-    c.drawString(14 * mm, 9.5 * mm, "AI With Rav  ·  Let's Make AI Simple")
-    c.drawRightString(W - 14 * mm, 9.5 * mm, f"{page}/{total}")
-
-
-def page_diagram(c, meta, image_path, caption):
-    """PAGE 1 — the diagram, as large as it will go. Nothing competes."""
-    c.setFillColor(PAPER)
+def ground(c):
+    c.setFillColor(BG)
     c.rect(0, 0, W, H, stroke=0, fill=1)
-    draw_header(c, meta.get("topic", ""), meta.get("short", "1"))
 
-    title = meta.get("title", "")
-    ts = st("t", fontName="Helvetica-Bold", fontSize=22, leading=26, textColor=NAVY)
-    p = Paragraph(md(title), ts)
-    tw, th = p.wrap(W - 34 * mm, 40 * mm)
-    p.drawOn(c, 17 * mm, H - 33 * mm - th)
 
-    top = H - 37 * mm - th
-    bottom = 24 * mm
-    box_w, box_h = W - 28 * mm, top - bottom
+def brand_bar(c, topic, number):
+    """A thin strip, not a header. It must not compete with the hook."""
+    c.setFillColor(MUTED)
+    c.setFont("Helvetica-Bold", 8.5)
+    c.drawString(14 * mm, H - 9 * mm, "AI WITH RAV")
+    c.setFillColor(CYAN)
+    c.drawRightString(W - 14 * mm, H - 9 * mm, f"{topic.upper()}  ·  #{number}")
+    c.setStrokeColor(LINE)
+    c.setLineWidth(0.9)
+    c.line(14 * mm, H - 12 * mm, W - 14 * mm, H - 12 * mm)
+
+
+def footer(c, page):
+    c.setFillColor(MUTED)
+    c.setFont("Helvetica", 7.5)
+    c.drawString(14 * mm, 7 * mm, "Let's Make AI Simple")
+    c.drawRightString(W - 14 * mm, 7 * mm, f"{page}/2")
+
+
+def page_hook(c, meta, hook, image_path, caption):
+    """PAGE 1 — the hook owns the top third, the diagram fills the rest."""
+    ground(c)
+    brand_bar(c, meta.get("topic", ""), meta.get("short", "1"))
+
+    # THE HOOK. Big enough to read while the thumb is still moving.
+    hs = st("hook", fontName="Helvetica-Bold", fontSize=34, leading=40,
+            textColor=CREAM, alignment=1)
+    p = Paragraph(md(hook), hs)
+    hw, hh = p.wrap(W - 40 * mm, 60 * mm)
+    hook_top = H - 20 * mm
+    p.drawOn(c, 20 * mm, hook_top - hh)
+
+    # A short gold rule under the hook, as a beat before the diagram.
+    c.setStrokeColor(GOLD)
+    c.setLineWidth(3)
+    c.line(W / 2 - 16 * mm, hook_top - hh - 6 * mm,
+           W / 2 + 16 * mm, hook_top - hh - 6 * mm)
+
+    top = hook_top - hh - 12 * mm
+    bottom = 16 * mm
+    box_w, box_h = W - 24 * mm, top - bottom
 
     if image_path and os.path.exists(image_path):
         img = ImageReader(image_path)
         iw, ih = img.getSize()
-        # Fill the frame: a reel viewer sees the diagram, not the margins.
         scale = min(box_w / iw, box_h / ih)
         dw, dh = iw * scale, ih * scale
-        # Sit just under the title rather than floating in the middle of a
-        # box that is taller than the image.
-        c.drawImage(img, (W - dw) / 2, top - dh - 4 * mm,
+        c.drawImage(img, (W - dw) / 2, bottom + (box_h - dh) / 2,
                     width=dw, height=dh, mask="auto")
-    else:
-        c.setFillColor(TINT)
-        c.roundRect(14 * mm, bottom, box_w, box_h, 6 * mm, stroke=0, fill=1)
 
-    if caption:
-        c.setFillColor(MUTED)
-        c.setFont("Helvetica-Oblique", 9.5)
-        c.drawCentredString(W / 2, 18 * mm, caption[:110])
-
-    draw_footer(c, 1)
+    footer(c, 1)
     c.showPage()
 
 
-def page_text(c, meta, hook, beats, takeaway):
-    """PAGE 2 — the words, sized to be read from a phone."""
-    c.setFillColor(PAPER)
-    c.rect(0, 0, W, H, stroke=0, fill=1)
-    draw_header(c, meta.get("topic", ""), meta.get("short", "1"))
+def page_beats(c, meta, beats, takeaway):
+    """PAGE 2 — three beats, then the line they keep."""
+    ground(c)
+    brand_bar(c, meta.get("topic", ""), meta.get("short", "1"))
 
-    y = H - 34 * mm
+    y = H - 26 * mm
+    bs = st("b", fontSize=16, leading=22, textColor=CREAM)
 
-    # Hook — the single line that has to land in the first second.
-    c.setFillColor(TINT)
-    c.roundRect(14 * mm, y - 24 * mm, W - 28 * mm, 24 * mm, 4 * mm, stroke=0, fill=1)
-    c.setFillColor(GOLD)
-    c.rect(14 * mm, y - 24 * mm, 2.4 * mm, 24 * mm, stroke=0, fill=1)
-    hs = st("h", fontName="Helvetica-Bold", fontSize=15, leading=20, textColor=NAVY)
-    p = Paragraph(md(hook), hs)
-    hw, hh = p.wrap(W - 44 * mm, 24 * mm)
-    p.drawOn(c, 21 * mm, y - 12 * mm - hh / 2)
-    y -= 30 * mm
-
-    # Three beats, numbered.
-    bs = st("b", fontSize=12.5, leading=17)
     for i, beat in enumerate(beats[:3], 1):
+        # Large numeral, used as a visual anchor rather than a bullet.
         c.setFillColor(CYAN)
-        c.circle(19 * mm, y - 2.6 * mm, 3.6 * mm, stroke=0, fill=1)
-        c.setFillColor(PAPER)
-        c.setFont("Helvetica-Bold", 9)
-        c.drawCentredString(19 * mm, y - 4.2 * mm, str(i))
+        c.setFont("Helvetica-Bold", 30)
+        c.drawString(16 * mm, y - 9 * mm, str(i))
 
         p = Paragraph(md(beat), bs)
-        pw, ph = p.wrap(W - 44 * mm, 60 * mm)
-        p.drawOn(c, 27 * mm, y - ph + 2 * mm)
-        y -= ph + 8 * mm
+        pw, ph = p.wrap(W - 46 * mm, 60 * mm)
+        p.drawOn(c, 32 * mm, y - ph)
+        y -= max(ph, 12 * mm) + 11 * mm
 
-    # Takeaway.
     if takeaway:
-        y -= 2 * mm
-        ts2 = st("k", fontName="Helvetica-Bold", fontSize=13, leading=17, textColor=NAVY)
-        p = Paragraph(md(takeaway), ts2)
-        kw_, kh = p.wrap(W - 46 * mm, 60 * mm)
-        box_h = kh + 17 * mm                      # label + text + padding
-        c.setFillColor("#FEF7EA")
-        c.roundRect(14 * mm, y - box_h, W - 28 * mm, box_h, 4 * mm, stroke=0, fill=1)
+        box_top = max(y, 42 * mm)
+        ts = st("k", fontName="Helvetica-Bold", fontSize=18, leading=24,
+                textColor=GOLD)
+        p = Paragraph(md(takeaway), ts)
+        kw_, kh = p.wrap(W - 50 * mm, 60 * mm)
+        bh = kh + 16 * mm
+        c.setFillColor(PANEL)
+        c.roundRect(14 * mm, box_top - bh, W - 28 * mm, bh, 3 * mm, stroke=0, fill=1)
         c.setFillColor(GOLD)
-        c.rect(14 * mm, y - box_h, 2.4 * mm, box_h, stroke=0, fill=1)
+        c.rect(14 * mm, box_top - bh, 2.6 * mm, bh, stroke=0, fill=1)
         c.setFillColor(MUTED)
-        c.setFont("Helvetica-Bold", 8)
-        c.drawString(21 * mm, y - 7.5 * mm, "REMEMBER")
-        p.drawOn(c, 21 * mm, y - box_h + 6 * mm)
+        c.setFont("Helvetica-Bold", 8.5)
+        c.drawString(22 * mm, box_top - 8 * mm, "REMEMBER THIS")
+        p.drawOn(c, 22 * mm, box_top - bh + 7 * mm)
 
-    # Watermark mark, bottom right, faint.
-    if os.path.exists(MARK):
-        c.saveState()
-        c.setFillAlpha(0.06)
-        img = ImageReader(MARK)
-        iw, ih = img.getSize()
-        h = 42 * mm
-        c.drawImage(img, W - h * iw / ih - 12 * mm, 18 * mm,
-                    width=h * iw / ih, height=h, mask="auto")
-        c.restoreState()
-
-    draw_footer(c, 2)
+    footer(c, 2)
     c.showPage()
 
 
@@ -231,8 +197,8 @@ def build(src_path):
 
     c = pdfcanvas.Canvas(out, pagesize=landscape(A4))
     c.setTitle(f"{meta.get('topic','')} — {meta.get('title','')}")
-    page_diagram(c, meta, image, caption)
-    page_text(c, meta, hook, beats, takeaway)
+    page_hook(c, meta, hook, image, caption)
+    page_beats(c, meta, beats, takeaway)
     c.save()
     print("BUILT:", out)
     return out

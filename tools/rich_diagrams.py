@@ -8,7 +8,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from short_style import *          # noqa: F403
+from viral_style import *          # noqa: F403
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 
@@ -21,7 +21,7 @@ def title(a, text, sub=None):
         a.text(6, 5.18, sub, ha="center", color=MUTED, fontsize=12)
 
 
-def chip(a, x, y, w, h, text, colour, fs=11.5, bold=True, fill=PAPER, tc=None):
+def chip(a, x, y, w, h, text, colour, fs=11.5, bold=True, fill=PANEL, tc=None):
     a.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.05",
                                ec=colour, fc=fill, lw=2.0))
     a.text(x + w / 2, y + h / 2, text, ha="center", va="center",
@@ -38,7 +38,7 @@ def fewshot(a):
     a.text(3.05, 4.05, '"Reply politely and formally"', ha="center", color=NAVY, fontsize=12)
     a.text(3.05, 3.65, "model guesses what you mean", ha="center", color=MUTED, fontsize=10.5)
     arrow(a, 3.05, 3.32, 3.05, 2.85, MUTED, lw=1.8)
-    chip(a, 0.5, 1.2, 5.1, 1.6, "", RED, fill="#FFF5F5")
+    chip(a, 0.5, 1.2, 5.1, 1.6, "", RED, fill="#2A1620")
     a.text(3.05, 2.45, "OUT:", ha="center", color=RED, fontsize=10.5, fontweight="bold")
     a.text(3.05, 1.95, '"Dear Esteemed Customer,\nWe are in receipt of your\nvalued communication..."',
            ha="center", va="center", color=NAVY, fontsize=11)
@@ -49,7 +49,7 @@ def fewshot(a):
     a.text(8.95, 3.68, 'OUT: "Sorry sir, aapka order\nkal tak aa jayega."',
            ha="center", va="top", color=NAVY, fontsize=10.5)
     arrow(a, 8.95, 3.32, 8.95, 2.85, CYAN, lw=1.8)
-    chip(a, 6.4, 1.2, 5.1, 1.6, "", GREEN, fill="#F2FBF9")
+    chip(a, 6.4, 1.2, 5.1, 1.6, "", GREEN, fill="#0F2A26")
     a.text(8.95, 2.45, "OUT:", ha="center", color=GREEN, fontsize=10.5, fontweight="bold")
     a.text(8.95, 1.95, '"Sorry ma\'am, delay ho gaya.\nAaj shaam tak deliver\nho jayega."',
            ha="center", va="center", color=NAVY, fontsize=11)
@@ -68,10 +68,10 @@ def equals(a):
         a.text(x, 2.9, '"Ravi"', ha="center", color=NAVY, fontsize=16, fontweight="bold")
         a.text(x, 2.15, "box in memory", ha="center", color=MUTED, fontsize=10.5)
     a.text(5.8, 3.1, "≠", ha="center", va="center", color=RED, fontsize=26, fontweight="bold")
-    chip(a, 0.6, 0.55, 5.1, 1.25, "", RED, fill="#FFF5F5")
+    chip(a, 0.6, 0.55, 5.1, 1.25, "", RED, fill="#2A1620")
     a.text(3.15, 1.45, "a == b", ha="center", color=RED, fontsize=14, fontweight="bold")
     a.text(3.15, 0.95, "different boxes  →  false", ha="center", color=NAVY, fontsize=11.5)
-    chip(a, 6.3, 0.55, 5.1, 1.25, "", GREEN, fill="#F2FBF9")
+    chip(a, 6.3, 0.55, 5.1, 1.25, "", GREEN, fill="#0F2A26")
     a.text(8.85, 1.45, "a.equals(b)", ha="center", color=GREEN, fontsize=14, fontweight="bold")
     a.text(8.85, 0.95, "same contents  →  true", ha="center", color=NAVY, fontsize=11.5)
 
@@ -86,7 +86,7 @@ def cache(a):
     for label, churn, freq, good in rows:
         col = GREEN if good else RED
         chip(a, 0.6, y - 0.42, 4.9, 0.92, "", col if good else LINE,
-             fill="#F2FBF9" if good else PAPER)
+             fill="#0F2A26" if good else PANEL)
         a.text(3.05, y + 0.14, label, ha="center", color=NAVY, fontsize=11.5, fontweight="bold")
         a.text(3.05, y - 0.22, churn, ha="center", color=MUTED, fontsize=10)
         a.text(6.4, y - 0.02, freq, ha="left", color=MUTED, fontsize=10.5)
@@ -107,11 +107,11 @@ def neuron(a):
         chip(a, 2.9, y - 0.28, 0.85, 0.56, val, CYAN, fs=11.5)
         a.text(4.35, y + 0.08, w, ha="center", color=GOLD, fontsize=12, fontweight="bold")
         arrow(a, 4.9, y, 6.1, 3.35, MUTED, lw=1.5)
-    a.add_patch(plt.Circle((6.9, 3.35), 0.78, ec=NAVY, fc=PAPER, lw=2.4))
+    a.add_patch(plt.Circle((6.9, 3.35), 0.78, ec=NAVY, fc=PANEL, lw=2.4))
     a.text(6.9, 3.5, "Σ", ha="center", va="center", color=NAVY, fontsize=20, fontweight="bold")
     a.text(6.9, 3.02, "0.61", ha="center", va="center", color=CYAN, fontsize=12, fontweight="bold")
     arrow(a, 7.75, 3.35, 8.7, 3.35, NAVY, lw=2.0)
-    chip(a, 8.8, 2.75, 2.7, 1.2, "", GREEN, fill="#F2FBF9")
+    chip(a, 8.8, 2.75, 2.7, 1.2, "", GREEN, fill="#0F2A26")
     a.text(10.15, 3.6, "over 0.5?", ha="center", color=MUTED, fontsize=10.5)
     a.text(10.15, 3.15, "APPROVE", ha="center", color=GREEN, fontsize=14, fontweight="bold")
     a.text(6, 1.35, "multiply each input by its weight  →  add them up  →  cross the line or not",
@@ -123,13 +123,13 @@ def neuron(a):
 # ── 5. AI tools: match checking to the cost of being wrong ─────────────────
 def risk(a):
     title(a, "WHAT DOES A WRONG ANSWER COST YOU?", "same tool, two very different jobs")
-    chip(a, 0.6, 2.2, 5.1, 2.7, "", GREEN, fill="#F2FBF9")
+    chip(a, 0.6, 2.2, 5.1, 2.7, "", GREEN, fill="#0F2A26")
     a.text(3.15, 4.5, "DRAFTING A WHATSAPP REPLY", ha="center", color=GREEN, fontsize=12, fontweight="bold")
     a.text(3.15, 3.9, "wrong answer costs:", ha="center", color=MUTED, fontsize=10.5)
     a.text(3.15, 3.4, "10 seconds", ha="center", color=GREEN, fontsize=19, fontweight="bold")
     a.text(3.15, 2.75, "just retype it", ha="center", color=NAVY, fontsize=11.5)
     a.text(3.15, 2.42, "→ no checking needed", ha="center", color=MUTED, fontsize=10.5)
-    chip(a, 6.3, 2.2, 5.1, 2.7, "", RED, fill="#FFF5F5")
+    chip(a, 6.3, 2.2, 5.1, 2.7, "", RED, fill="#2A1620")
     a.text(8.85, 4.5, "SUMMARISING A RENT AGREEMENT", ha="center", color=RED, fontsize=12, fontweight="bold")
     a.text(8.85, 3.9, "wrong answer costs:", ha="center", color=MUTED, fontsize=10.5)
     a.text(8.85, 3.4, "a missed clause", ha="center", color=RED, fontsize=17, fontweight="bold")
@@ -151,7 +151,7 @@ def understand(a):
     a.text(1.1, 3.45, '"Patna, the capital of Bihar, sits on the Ganga."', ha="left",
            color=NAVY, fontsize=12.5)
     arrow(a, 6, 3.02, 6, 2.55, MUTED, lw=1.8)
-    chip(a, 2.4, 1.6, 7.2, 0.92, 'answers "Patna" — correctly', GREEN, fs=13, fill="#F2FBF9")
+    chip(a, 2.4, 1.6, 7.2, 0.92, 'answers "Patna" — correctly', GREEN, fs=13, fill="#0F2A26")
     a.text(6, 1.0, "Now ask about a village it has never seen written down.",
            ha="center", color=NAVY, fontsize=12)
     a.text(6, 0.48, "It will still answer confidently — because the SHAPE of the answer is all it knows",
@@ -160,8 +160,8 @@ def understand(a):
 
 # ── 7. AI Q&A: invented citations ──────────────────────────────────────────
 def citation(a):
-    title(a, "WHY IT INVENTS A PAPER", 'ask: "cite a study on AI in Indian agriculture"')
-    chip(a, 1.6, 3.2, 8.8, 1.5, "", GOLD, fill="#FFFBF2")
+    title(a, "WHY IT INVENTS A PANEL", 'ask: "cite a study on AI in Indian agriculture"')
+    chip(a, 1.6, 3.2, 8.8, 1.5, "", GOLD, fill="#2A2214")
     a.text(6, 4.32, "Sharma, R. & Patel, K. (2021).", ha="center", color=NAVY,
            fontsize=14, fontweight="bold")
     a.text(6, 3.86, '"Machine Learning for Crop Yield Prediction in Punjab."',
@@ -171,7 +171,7 @@ def citation(a):
     a.text(1.0, 2.75, "Author names:  plausible ✓", ha="left", color=GREEN, fontsize=11.5)
     a.text(1.0, 2.3, "Journal:  real ✓", ha="left", color=GREEN, fontsize=11.5)
     a.text(1.0, 1.85, "Format:  perfect ✓", ha="left", color=GREEN, fontsize=11.5)
-    chip(a, 6.4, 1.6, 5.0, 1.4, "", RED, fill="#FFF5F5")
+    chip(a, 6.4, 1.6, 5.0, 1.4, "", RED, fill="#2A1620")
     a.text(8.9, 2.62, "The paper does not exist.", ha="center", color=RED,
            fontsize=13.5, fontweight="bold")
     a.text(8.9, 2.1, "Nothing looked it up. There is no", ha="center", color=NAVY, fontsize=11)
@@ -207,7 +207,7 @@ def ship(a):
                            "Movie review sentiment", "Chatbot from a YouTube video"]):
         a.text(3.15, 3.9 - i * 0.45, "· " + t, ha="center", color=NAVY, fontsize=11)
     a.text(3.15, 1.9, "all ran perfectly, first time", ha="center", color=MUTED, fontsize=10.5)
-    chip(a, 6.3, 1.5, 5.1, 3.4, "", GREEN, fill="#F2FBF9")
+    chip(a, 6.3, 1.5, 5.1, 3.4, "", GREEN, fill="#0F2A26")
     a.text(8.85, 4.5, "1 THING PEOPLE USE", ha="center", color=GREEN, fontsize=12.5, fontweight="bold")
     a.text(8.85, 3.9, "A WhatsApp bot that answers", ha="center", color=NAVY, fontsize=11)
     a.text(8.85, 3.55, "questions about your hostel mess menu", ha="center", color=NAVY, fontsize=11)
@@ -227,7 +227,7 @@ def filt(a):
     gx, gy, cell = 0.8, 1.5, 0.42
     for r in range(8):
         for c in range(8):
-            shade = "#D7E6F2" if c < 4 else "#FFFFFF"
+            shade = "#2A3854" if c < 4 else PANEL
             a.add_patch(plt.Rectangle((gx + c * cell, gy + r * cell), cell, cell,
                                       fc=shade, ec=LINE, lw=0.8))
     a.text(gx + 4 * cell, gy + 8 * cell + 0.3, "the image", ha="center",
@@ -246,7 +246,7 @@ def filt(a):
     a.text(7.0, 3.05, "dark | light", ha="center", color=NAVY, fontsize=12)
     a.text(7.0, 2.72, "2×2 window", ha="center", color=MUTED, fontsize=10)
     arrow(a, 8.3, 3.2, 9.0, 3.2, MUTED, lw=2.0)
-    chip(a, 9.1, 2.3, 2.4, 1.8, "", GREEN, fill="#F2FBF9")
+    chip(a, 9.1, 2.3, 2.4, 1.8, "", GREEN, fill="#0F2A26")
     a.text(10.3, 3.72, "match map", ha="center", color=GREEN, fontsize=11.5, fontweight="bold")
     a.text(10.3, 3.1, "bright exactly", ha="center", color=NAVY, fontsize=11)
     a.text(10.3, 2.75, "where the edge is", ha="center", color=NAVY, fontsize=11)
@@ -289,12 +289,12 @@ def finish(a):
         # top track: the "perfect" half-project
         col = CYAN if done_a else LINE
         a.add_patch(FancyBboxPatch((x, 3.55), 1.62, 0.78, boxstyle="round,pad=0.04",
-                                   ec=col, fc=PAPER, lw=2.0))
+                                   ec=col, fc=PANEL, lw=2.0))
         a.text(x + 0.81, 3.94, s, ha="center", va="center",
-               color=NAVY if done_a else "#B8C4D0", fontsize=10)
+               color=NAVY if done_a else "#4A5A74", fontsize=10)
         # bottom track: the finished simple project
         a.add_patch(FancyBboxPatch((x, 1.75), 1.62, 0.78, boxstyle="round,pad=0.04",
-                                   ec=GREEN, fc="#F2FBF9", lw=2.0))
+                                   ec=GREEN, fc="#0F2A26", lw=2.0))
         a.text(x + 0.81, 2.14, s, ha="center", va="center", color=NAVY, fontsize=10)
     a.text(0.55, 4.62, "PERFECT, UNFINISHED", ha="left", color=CYAN, fontsize=12.5, fontweight="bold")
     a.text(0.55, 2.82, "SIMPLE, FINISHED", ha="left", color=GREEN, fontsize=12.5, fontweight="bold")
