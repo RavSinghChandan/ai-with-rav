@@ -1,5 +1,9 @@
 # 🗺️ AI with Rav — The Full Series Roadmap (STATIC — never deviate)
 
+> **FORMAT CHANGE (2026-09-24).** New content ships as **sub-3-minute shorts**,
+> not 12-minute lessons. One folder still equals one playlist — see
+> [SHORTS-FORMAT.md](SHORTS-FORMAT.md). Everything already built is unchanged.
+
 > The master learning journey: **13 core modules, each a full 30-day playlist.**
 > Each module has its own `topics/<folder>/CURRICULUM.md` with the locked day-by-day plan.
 > **ALWAYS read the relevant CURRICULUM.md before generating any day. Do NOT jump ahead or merge modules.**
