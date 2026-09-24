@@ -39,8 +39,8 @@ SHORTS = {
 
  "05-llms": ("LLMs", "An LLM only predicts the next word",
    "ChatGPT is not thinking. It is answering: **what word comes next?** — again and again.",
-   ["Given 'The capital of France is', it scores every word it knows.",
-    "'Paris' scores highest, so it is picked. Then the whole thing repeats.",
+   ["Given 'The capital of Maharashtra is', it scores every word it knows.",
+    "'Mumbai' scores highest, so it is picked. Then the whole thing repeats.",
     "Fluency is the **side effect** of doing that billions of times."],
    "Knowing this tells you exactly when it will confidently invent something.",
    "One word at a time, each one fed back in", "nextword"),
@@ -264,11 +264,11 @@ def draw(key, ax, a):
         a.text(6, 5.3, "ONE WORD AT A TIME", ha="center", color=NAVY,
                fontsize=14, fontweight="bold")
         card(a, 0.8, 3.0, 4.6, 1.3, LINE, lw=2)
-        a.text(3.1, 3.65, "The capital of France is", ha="center", color=NAVY, fontsize=13)
+        a.text(3.1, 3.65, "The capital of Maharashtra is", ha="center", color=NAVY, fontsize=12.5)
         arrow(a, 5.5, 3.65, 6.4, 3.65, CYAN, lw=2.4)
-        for i, (w, p, col) in enumerate([("Paris", "0.92", GREEN),
-                                         ("Lyon", "0.03", MUTED),
-                                         ("Rome", "0.01", MUTED)]):
+        for i, (w, p, col) in enumerate([("Mumbai", "0.94", GREEN),
+                                         ("Pune", "0.03", MUTED),
+                                         ("Nagpur", "0.01", MUTED)]):
             y = 4.0 - i * 0.95
             card(a, 6.6, y - 0.32, 2.2, 0.72, col, lw=1.8)
             a.text(7.7, y, w, ha="center", color=col if col != MUTED else NAVY,

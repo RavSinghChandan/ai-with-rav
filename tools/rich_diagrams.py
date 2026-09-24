@@ -203,8 +203,8 @@ def ship(a):
     title(a, "TWO PORTFOLIOS, SAME SIX WEEKS", "which one gets the interview?")
     chip(a, 0.6, 1.5, 5.1, 3.4, "", MUTED)
     a.text(3.15, 4.5, "8 TUTORIAL NOTEBOOKS", ha="center", color=MUTED, fontsize=12.5, fontweight="bold")
-    for i, t in enumerate(["Titanic survival", "MNIST digits", "Iris classifier",
-                           "Chatbot from a video"]):
+    for i, t in enumerate(["House price predictor", "Handwritten digit demo",
+                           "Movie review sentiment", "Chatbot from a YouTube video"]):
         a.text(3.15, 3.9 - i * 0.45, "· " + t, ha="center", color=NAVY, fontsize=11)
     a.text(3.15, 1.9, "all ran perfectly, first time", ha="center", color=MUTED, fontsize=10.5)
     chip(a, 6.3, 1.5, 5.1, 3.4, "", GREEN, fill="#F2FBF9")
