@@ -33,20 +33,23 @@ from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas as pdfcanvas
 from reportlab.platypus import Paragraph
 
-# Palette — kept in step with tools/viral_style.py
-BG = "#0B1220"
-PANEL = "#141E33"
-LINE = "#24314D"
-CYAN = "#00B8FC"
-GOLD = "#F6BB63"
-GREEN = "#2BD9A8"
-CREAM = "#EAF2FB"
-MUTED = "#8FA3BF"
+# Palette — AIWithRav brand, sampled from the channel banner.
+# White ground: the slides must read on a phone in daylight and print clean.
+BG = "#FFFFFF"      # page
+PANEL = "#F2F7FC"   # callout panels, a hair off-white so edges show
+LINE = "#D4E3F2"    # hairlines
+CYAN = "#0E9CFE"    # brand accent, exact from the wordmark
+GOLD = "#0A6FC2"    # secondary accent (was gold; gold dies on white)
+GREEN = "#12A47A"   # success/positive
+CREAM = "#001954"   # PRIMARY TEXT — brand navy, not cream
+MUTED = "#5B7392"   # secondary text
 
 W, H = landscape(A4)
 HERE = os.path.dirname(os.path.abspath(__file__))
 MARK = os.path.join(HERE, "brand", "rav-mark.png")
-LOCKUP = os.path.join(HERE, "brand", "rav-lockup-dark.png")
+# The AIWithRav wordmark, cropped from the channel banner. On a white ground
+# the full lockup reads better than the bare mark, so it is the default.
+LOCKUP = os.path.join(HERE, "brand", "aiwithrav-wordmark.png")
 if not os.path.exists(LOCKUP):
     LOCKUP = os.path.join(HERE, "brand", "rav-lockup.png")
 
@@ -83,9 +86,20 @@ def ground(c):
 
 def brand_bar(c, topic, number):
     """A thin strip, not a header. It must not compete with the hook."""
-    c.setFillColor(MUTED)
-    c.setFont("Helvetica-Bold", 8.5)
-    c.drawString(14 * mm, H - 9 * mm, "AI WITH RAV")
+    if os.path.exists(LOCKUP):
+        try:
+            img = ImageReader(LOCKUP)
+            iw, ih = img.getSize()
+            lh = 5.4 * mm
+            c.drawImage(img, 14 * mm, H - 10.6 * mm, width=lh * iw / ih,
+                        height=lh, mask="auto")
+        except Exception:
+            c.setFillColor(CREAM); c.setFont("Helvetica-Bold", 8.5)
+            c.drawString(14 * mm, H - 9 * mm, "AIWithRav")
+    else:
+        c.setFillColor(CREAM)
+        c.setFont("Helvetica-Bold", 8.5)
+        c.drawString(14 * mm, H - 9 * mm, "AIWithRav")
     c.setFillColor(CYAN)
     c.drawRightString(W - 14 * mm, H - 9 * mm, f"{topic.upper()}  ·  #{number}")
     c.setStrokeColor(LINE)

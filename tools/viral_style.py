@@ -26,19 +26,19 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 
 # Ground
-BG = "#0B1220"          # near-black with a blue cast, matches the brand navy
-PANEL = "#141E33"       # raised card
-LINE = "#24314D"
+BG = "#FFFFFF"          # white page — matches the AIWithRav brand
+PANEL = "#F2F7FC"       # raised card, a hair off-white so its edge reads
+LINE = "#D4E3F2"
 
 # Brand, straight from the logo
-CYAN = "#00B8FC"
-GOLD = "#F6BB63"
+CYAN = "#0E9CFE"        # brand accent, sampled from the wordmark
+GOLD = "#0A6FC2"        # deep blue; gold has no contrast on white
 
 # Semantic
-GREEN = "#2BD9A8"
-RED = "#FF5A6E"
-CREAM = "#EAF2FB"       # body text
-MUTED = "#8FA3BF"       # labels
+GREEN = "#12A47A"
+RED = "#E5484D"
+CREAM = "#001954"       # body text — brand navy on white
+MUTED = "#5B7392"       # labels
 WHITE = "#FFFFFF"
 
 
